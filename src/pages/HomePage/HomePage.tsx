@@ -1,12 +1,18 @@
-import { useSearchParams, useNavigate } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+// import { useSearchParams, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
 import Mapa from '../../components/mapa/mapa.tsx'
 import InputEndereco from '../../components/inputCoordenadas/inputEndereco.tsx'
 
 
 
 function HomePage(){
-    const [coordenadas, setCoordenadas] = useState(null)
+    type Coordenadas = {
+        lat: number
+        lon: number
+    }
+
+    const [coordenadas, setCoordenadas] = useState<Coordenadas | undefined>(undefined)
+
 
     return (
         <div>
