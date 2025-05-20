@@ -1,0 +1,154 @@
+.login-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  z-index: 50;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.login-box {
+  position: relative;
+  background-color: white;
+  border-radius: 1.5rem;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.close-button {
+  padding: 0.5rem;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.auth-success {
+  text-align: center;
+}
+
+.success-message {
+  background-color: #f0fff4;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.icon {
+  color: #38a169;
+}
+
+.continue-button {
+  width: 100%;
+  padding: 1rem;
+  background-color: #3182ce;
+  color: white;
+  border-radius: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.input-wrapper {
+  position: relative;
+}
+
+.icon {
+  position: absolute;
+  left: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #3182ce;
+}
+
+.input-field {
+  width: 100%;
+  padding: 0.75rem 1.5rem 0.75rem 2.5rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.input-field:focus {
+  border-color: #3182ce;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 1rem;
+  background-color: #3182ce;
+  color: white;
+  border-radius: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.switch-mode {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.switch-button {
+  background: transparent;
+  color: #3182ce;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+}
+
+.footer {
+  margin-top: 2rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #4a5568;
+}
+
+.footer-link {
+  color: #3182ce;
+  text-decoration: none;
+}
+
+.footer-link:hover {
+  text-decoration: underline;
+}
