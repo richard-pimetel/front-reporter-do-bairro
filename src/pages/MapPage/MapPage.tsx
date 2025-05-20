@@ -1,9 +1,11 @@
+// import { useSearchParams, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import Mapa from '../../components/mapa/mapa.tsx'
 import InputEndereco from '../../components/inputCoordenadas/inputEndereco.tsx'
 
 
-function HomePage(){
+
+function MapPage(){
     type Coordenadas = {
         lat: number
         lon: number
@@ -20,4 +22,4 @@ function HomePage(){
     )
 }
 
-export default HomePage
+export default MapPage
