@@ -1,29 +1,40 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { X, Mail, Lock, User, Eye, EyeOff, CheckCircle } from 'lucide-react';
-import './LoginPage.css'; // Importação do CSS separado
-
-type FormData = {
-  name: string;
-  email: string;
-  password: string;
-  bio: string;
-};
+import { useAuth } from '../../contexts/AuthContext';
+import loginUser from '../../services/user/login';
+import './LoginPage.css';
 
 function LoginPage() {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [authSuccess, setAuthSuccess] = useState(false);
-  const [formData, setFormData] = useState<FormData>({
-    name: '',
-    email: '',
-    password: '',
-    bio: ''
-  });
+  const [formData, setFormData] = useState({ name: '', email: '', password: '', bio: '' });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    setAuthSuccess(true);
+
+    if (isLogin) {
+      const response = await loginUser({ email: formData.email, senha: formData.password });
+
+      if (response?.status && response.usuario) {
+        login(response.usuario); // Salva no contexto
+        setAuthSuccess(true);
+
+        setTimeout(() => {
+          navigate('/');
+        }, 1500); // pequeno delay para exibir mensagem
+      } else {
+        alert("Email ou senha incorretos.");
+      }
+
+    } else {
+      // Aqui você pode acionar a função postUsuario, como feito anteriormente
+      alert("Cadastro ainda não implementado.");
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -33,22 +44,12 @@ function LoginPage() {
 
   return (
     <div className="login-container">
-      <div 
-        className="overlay"
-        onClick={() => setAuthSuccess(false)}
-      ></div>
+      <div className="overlay" onClick={() => setAuthSuccess(false)}></div>
       
       <div className="login-box">
-        {/* Header */}
         <div className="header">
-          <h2>
-            {authSuccess ? 'Bem-vindo!' : (isLogin ? 'Login de Repórter' : 'Cadastro de Repórter')}
-          </h2>
-          <button 
-            onClick={() => setAuthSuccess(false)}
-            className="close-button"
-            aria-label="Fechar"
-          >
+          <h2>{authSuccess ? 'Bem-vindo!' : (isLogin ? 'Login de Repórter' : 'Cadastro de Repórter')}</h2>
+          <button onClick={() => setAuthSuccess(false)} className="close-button">
             <X size={24} />
           </button>
         </div>
@@ -57,25 +58,12 @@ function LoginPage() {
           <div className="auth-success">
             <div className="success-message">
               <CheckCircle size={48} className="icon" />
-              <h3>
-                {isLogin ? 'Login realizado com sucesso!' : 'Cadastro realizado com sucesso!'}
-              </h3>
-              <p>
-                {isLogin 
-                  ? `Bem-vindo de volta, ${formData.email.split('@')[0]}!` 
-                  : `Bem-vindo, ${formData.name}! Sua conta foi criada.`}
-              </p>
+              <h3>Login realizado com sucesso!</h3>
+              <p>Bem-vindo de volta, {formData.email.split('@')[0]}!</p>
             </div>
-            <button
-              onClick={() => setAuthSuccess(false)}
-              className="continue-button"
-            >
-              Continuar
-            </button>
           </div>
         ) : (
           <>
-            {/* Form */}
             <form onSubmit={handleSubmit} className="form">
               {!isLogin && (
                 <div className="form-group">
@@ -127,45 +115,28 @@ function LoginPage() {
                     placeholder="Digite sua senha"
                     required
                   />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="toggle-password"
-                  >
+                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="toggle-password">
                     {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                   </button>
                 </div>
               </div>
 
-              <button
-                type="submit"
-                className="submit-button"
-              >
+              <button type="submit" className="submit-button">
                 {isLogin ? 'Entrar' : 'Cadastrar'}
               </button>
 
               <div className="switch-mode">
-                <button
-                  type="button"
-                  onClick={() => setIsLogin(!isLogin)}
-                  className="switch-button"
-                >
+                <button type="button" onClick={() => setIsLogin(!isLogin)} className="switch-button">
                   {isLogin ? 'Não tem uma conta? Cadastre-se' : 'Já tem uma conta? Entre'}
                 </button>
               </div>
             </form>
 
-            {/* Footer */}
             <div className="footer">
               <p>
                 Ao se cadastrar, você concorda com nossos{' '}
-                <a href="#" className="footer-link">
-                  Termos de Uso
-                </a>{' '}
-                e{' '}
-                <a href="#" className="footer-link">
-                  Política de Privacidade
-                </a>
+                <a href="#" className="footer-link">Termos de Uso</a> e{' '}
+                <a href="#" className="footer-link">Política de Privacidade</a>
               </p>
             </div>
           </>

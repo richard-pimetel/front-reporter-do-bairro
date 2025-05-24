@@ -1,37 +1,27 @@
 // src/contexts/AuthContext.tsx
 import { createContext, useContext, useState, ReactNode } from "react"
+import { Usuario } from "../types" // caminho ajustável conforme sua estrutura
 
-// Tipo do usuário (ajuste conforme sua estrutura real de dados)
-type User = {
-  id: string
-  name: string
-  email: string
-  // adicione mais campos conforme necessário
-}
-
-// Tipo do contexto
 type AuthContextType = {
-  user: User | null
-  login: (userData: User) => void
+  user: Usuario | null
+  login: (userData: Usuario) => void
   logout: () => void
   isLoggedIn: boolean
 }
 
-// Cria o contexto com tipo genérico ou valor inicial nulo
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
-// Tipo dos props do AuthProvider
 type AuthProviderProps = {
   children: ReactNode
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [user, setUser] = useState<User | null>(() => {
+  const [user, setUser] = useState<Usuario | null>(() => {
     const storedUser = localStorage.getItem("user")
     return storedUser ? JSON.parse(storedUser) : null
   })
 
-  const login = (userData: User) => {
+  const login = (userData: Usuario) => {
     setUser(userData)
     localStorage.setItem("user", JSON.stringify(userData))
   }
@@ -48,7 +38,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
   )
 }
 
-// Hook para usar o contexto
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext)
   if (!context) {
