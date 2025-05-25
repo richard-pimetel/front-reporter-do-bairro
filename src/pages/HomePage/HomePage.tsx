@@ -1,10 +1,10 @@
 
-import { useAuth } from '../../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext'
+import { useNavigate } from 'react-router-dom'
 
 function HomePage(){
-    const { user, isLoggedIn, logout } = useAuth();
-    const navigate = useNavigate();
+    const { user, isLoggedIn, logout } = useAuth()
+    const navigate = useNavigate()
 
     return (
         <div>

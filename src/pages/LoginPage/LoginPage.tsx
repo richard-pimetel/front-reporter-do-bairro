@@ -1,15 +1,15 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { X, Mail, Lock, User, Eye, EyeOff, CheckCircle } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
-import loginUser from '../../services/user/login';
-import postUsuario from '../../services/user/postUsuario';
-import './LoginPage.css';
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { X, Mail, Lock, User, Eye, EyeOff, CheckCircle } from 'lucide-react'
+import { useAuth } from '../../contexts/AuthContext'
+import loginUser from '../../services/user/login'
+import postUsuario from '../../services/user/postUsuario'
+import './LoginPage.css'
 
 function LoginPage() {
-  const [isLogin, setIsLogin] = useState(true);
-  const [showPassword, setShowPassword] = useState(false);
-  const [authSuccess, setAuthSuccess] = useState(false);
+  const [isLogin, setIsLogin] = useState(true)
+  const [showPassword, setShowPassword] = useState(false)
+  const [authSuccess, setAuthSuccess] = useState(false)
 
   const [formData, setFormData] = useState({
     name: '',
@@ -18,31 +18,31 @@ function LoginPage() {
     confirmPassword: '',
     data_nascimento: '',
     bio: ''
-  });
+  })
 
-  const { login } = useAuth();
-  const navigate = useNavigate();
+  const { login } = useAuth()
+  const navigate = useNavigate()
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
 
     if (isLogin) {
        
-      const response = await loginUser({ email: formData.email, senha: formData.password });
+      const response = await loginUser({ email: formData.email, senha: formData.password })
 
       if (response?.status && response.usuario) {
-        login(response.usuario);
-        setAuthSuccess(true);
-        setTimeout(() => navigate('/'), 1500);
+        login(response.usuario)
+        setAuthSuccess(true)
+        setTimeout(() => navigate('/'), 1500)
       } else {
-        alert("Email ou senha incorretos.");
+        alert("Email ou senha incorretos.")
       }
 
     } else {
-      console.log("Tentando cadastrar...");
+      console.log("Tentando cadastrar...")
       if (formData.password !== formData.confirmPassword) {
-        alert("As senhas não coincidem.");
-        return;
+        alert("As senhas não coincidem.")
+        return
       }
 
       const response = await postUsuario({
@@ -51,22 +51,22 @@ function LoginPage() {
         senha: formData.password,
         data_nascimento: formData.data_nascimento,
         biografia: formData.bio
-      });
+      })
 
       if (response?.status && response.usuario) {
-        login(response.usuario);
-        setAuthSuccess(true);
-        setTimeout(() => navigate('/'), 1500);
+        login(response.usuario)
+        setAuthSuccess(true)
+        setTimeout(() => navigate('/'), 1500)
       } else {
-        alert("Erro ao cadastrar. Verifique os dados e tente novamente.");
+        alert("Erro ao cadastrar. Verifique os dados e tente novamente.")
       }
     }
-  };
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
+    const { name, value } = e.target
+    setFormData(prev => ({ ...prev, [name]: value }))
+  }
 
   return (
     <div className="login-container">
@@ -205,7 +205,7 @@ function LoginPage() {
         )}
       </div>
     </div>
-  );
+  )
 }
 
-export default LoginPage;
+export default LoginPage

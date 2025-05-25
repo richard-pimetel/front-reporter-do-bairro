@@ -39,7 +39,7 @@ function Mapa({ coordenadas }: MapaProps) {
   return (
     <MapContainer center={center} zoom={13} style={{ height: "400px", width: "100%" }}>
       <TileLayer
-        attribution='&copy; OpenStreetMap contributors'
+        attribution='&copy OpenStreetMap contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       {coordenadas && (
