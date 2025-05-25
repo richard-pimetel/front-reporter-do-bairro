@@ -4,7 +4,7 @@ interface UsuarioInput {
     nome: string
     email: string
     senha: string
-    data_de_nascimento: Date 
+    data_nascimento: string 
     biografia?: string
     foto_perfil?: string
 }
@@ -31,8 +31,8 @@ async function postUsuario(data: UsuarioInput): Promise<UsuarioResponse | null> 
             nome: data.nome,
             email: data.email,
             senha: data.senha,
-            data_nascimento: data.data_de_nascimento,
-            biografia: data.biografia || null,
+            data_nascimento: data.data_nascimento,
+            biografia: data.biografia || '',
             foto_perfil: data.foto_perfil || "https://www.pngall.com/wp-content/uploads/5/User-Profile-PNG-Image.png"
         }
 

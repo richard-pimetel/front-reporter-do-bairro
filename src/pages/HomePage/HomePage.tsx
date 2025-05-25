@@ -1,21 +1,22 @@
-import { useState } from 'react'
-import Mapa from '../../components/mapa/mapa.tsx'
-import InputEndereco from '../../components/inputCoordenadas/inputEndereco.tsx'
 
+import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 function HomePage(){
-    type Coordenadas = {
-        lat: number
-        lon: number
-    }
-
-    const [coordenadas, setCoordenadas] = useState<Coordenadas | undefined>(undefined)
-
+    const { user, isLoggedIn, logout } = useAuth();
+    const navigate = useNavigate();
 
     return (
         <div>
-            <InputEndereco setCoordenadas={setCoordenadas} />
-            <Mapa coordenadas={coordenadas} />
+            {
+            isLoggedIn 
+                ? 
+                <div>
+                    <p>Olá {user?.nome}</p> 
+                    <button onClick={() => logout()}>Sair</button>
+                </div>
+                : <button onClick={() => navigate('/login')}>Entrar</button>
+            }
         </div>
     )
 }
