@@ -1,0 +1,35 @@
+.input-endereco {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 400px;
+  }
+  
+  .input-endereco input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+  }
+  
+  .input-endereco button {
+    padding: 8px;
+    background-color: #2e7d32;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  .input-endereco button:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+  }
+  
+  .erro-endereco {
+    color: red;
+    font-size: 0.9rem;
+  }
+  

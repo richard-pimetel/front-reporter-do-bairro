@@ -1,0 +1,74 @@
+.card-noticia {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease-in-out;
+}
+
+.card-noticia:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.card-noticia-imagem-container {
+  position: relative;
+  width: 100%;
+  height: 180px; /* Altura fixa para consistência */
+  overflow: hidden;
+}
+
+.card-noticia-imagem {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card-noticia-categoria {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: #ff4500; /* Cor de exemplo */
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75em;
+  font-weight: bold;
+}
+
+.card-noticia-conteudo {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.card-noticia-titulo {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 1.1em;
+  line-height: 1.3;
+  color: #333;
+}
+
+.card-noticia-descricao {
+  font-size: 0.9em;
+  color: #666;
+  line-height: 1.5;
+  flex-grow: 1; /* Permite que a descrição ocupe o espaço disponível */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Limita a 3 linhas */
+  -webkit-box-orient: vertical;
+}
+
+.card-noticia-tempo {
+  font-size: 0.8em;
+  color: #999;
+  margin-top: 10px;
+}

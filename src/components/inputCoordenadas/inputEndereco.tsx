@@ -1,25 +1,21 @@
 import { useState } from 'react'
-import { buscarCoordenadas } from '../../services/Nominatim/buscarCoordenadas'
+import buscarCoordenadasComEndereco from '../../services/Nominatim/buscarCoordenadas'
 import './inputEndereco.css'
 
-// Tipo das coordenadas esperadas
-type Coordenadas = {
-  lat: number
-  lon: number
-}
-
-// Props do componente
+// Props esperadas do componente
 type InputEnderecoProps = {
-  setCoordenadas: (coords: Coordenadas) => void
+  setResultadoEndereco: (resultado: any) => void // agora usa a função certa
 }
 
-function InputEndereco({ setCoordenadas }: InputEnderecoProps) {
+function InputEndereco({ setResultadoEndereco }: InputEnderecoProps) {
   const [endereco, setEndereco] = useState("")
 
   const handleBuscar = async () => {
-    const coords = await buscarCoordenadas(endereco)
-    if (coords) {
-      setCoordenadas(coords)
+    const resultado = await buscarCoordenadasComEndereco(endereco)
+
+    if (resultado) {
+      console.log("Resultado completo:", resultado)
+      setResultadoEndereco(resultado) // agora deve funcionar
     } else {
       alert("Endereço não encontrado.")
     }
@@ -33,7 +29,7 @@ function InputEndereco({ setCoordenadas }: InputEnderecoProps) {
         onChange={(e) => setEndereco(e.target.value)}
         placeholder="Digite o endereço"
       />
-      <button onClick={handleBuscar}>Buscar</button>
+      <button onClick={handleBuscar}>Verificar Endereço</button>
     </div>
   )
 }

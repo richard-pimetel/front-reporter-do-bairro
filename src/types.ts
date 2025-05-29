@@ -32,13 +32,23 @@ export type ViaCepResponse = Omit<{
   ddd: string
 }, 'ddd'>
 
+export type Coordenadas = {
+  lat: number
+  lon: number
+}
+
+export type InputEnderecoProps = {
+  setCoordenadas: (coords: Coordenadas) => void
+}
+
 export type CoordenadasComEndereco = {
   lat: number
   lon: number
-  name: string
+  name?: string
   display_name: string
-  viaCepData: ViaCepResponse | null
+  viaCepData?: any
 }
+
 
 // Tipos retornados pelas APIs
 export type NominatimResponseItem = {
