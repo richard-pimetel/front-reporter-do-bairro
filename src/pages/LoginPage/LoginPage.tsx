@@ -2,8 +2,8 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { X, Mail, Lock, User, Eye, EyeOff, CheckCircle } from 'lucide-react'
 import { useAuth } from '../../contexts/AuthContext'
-import loginUser from '../../services/user/login'
-import postUsuario from '../../services/user/postUsuario'
+import loginUser from '../../services/API/user/login'
+import postUsuario from '../../services/API/user/postUsuario'
 import './LoginPage.css'
 
 function LoginPage() {

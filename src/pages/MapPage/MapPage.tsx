@@ -16,7 +16,7 @@ function MapPage(){
 
     return (
         <div>
-            <InputEndereco setCoordenadas={setCoordenadas} />
+            <InputEndereco setResultadoEndereco={setCoordenadas} />
             <Mapa coordenadas={coordenadas} />
         </div>
     )

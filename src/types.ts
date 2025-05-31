@@ -46,7 +46,7 @@ export type CoordenadasComEndereco = {
   lon: number
   name?: string
   display_name: string
-  viaCepData?: any
+  cep: string | null
 }
 
 
