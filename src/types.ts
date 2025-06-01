@@ -1,11 +1,10 @@
 export interface NoticiaItem {
   id?: number
   titulo: string
-  categorias: Categoria[]
+  categorias: Categoria[] | number[]
   urls_midia?: string[]
-  link: string
   conteudo: string
-  data_postagem?: Date
+  data_postagem: string
   User?: Usuario
   tbl_usuario_id?: number
   endereco: Endereco
@@ -37,6 +36,22 @@ export interface Endereco {
   lat: number
   lon: number
 }
+
+export interface NoticiaCreatePayload {
+  titulo: string
+  conteudo: string
+  tbl_usuario_id: number
+  endereco: {
+    cep: string
+    display_name: string
+    lat: number
+    lon: number
+  }
+  urls_midia?: string[] 
+  categorias: number[] 
+  data_postagem?: string
+}
+
 export interface Usuario {
   id: number
   nome: string

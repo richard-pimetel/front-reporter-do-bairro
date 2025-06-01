@@ -1,7 +1,7 @@
 // import { useSearchParams, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import Mapa from '../../components/mapa/mapa.tsx'
-import InputEndereco from '../../components/inputCoordenadas/inputEndereco.tsx'
+import InputEndereco from '../../components/InputEndereco/inputEndereco.tsx'
 
 
 

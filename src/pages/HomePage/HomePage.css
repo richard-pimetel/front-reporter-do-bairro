@@ -41,7 +41,7 @@ body {
 .nome-app {
   font-weight: bold;
   font-size: 1.5em;
-  color: #333;
+  color: #ff1900;
 }
 
 .cabecalho-direita {
@@ -73,28 +73,20 @@ body {
   position: absolute;
   right: 10px;
   background: none;
-  border: none;
   cursor: pointer;
-  color: #888;
   font-size: 1.1em;
 }
 
-.icone-notificacao,
-.icone-configuracao,
-.icone-perfil {
-  background: none;
-  border: none;
-  font-size: 1.2em;
+.cabecalho-direita button ion-icon{
   cursor: pointer;
-  color: #555;
+  color: black;
+  font-size: 1.2em;
 }
 
-.botao-denuncia {
-  background-color: #ff1900; /* Cor de destaque */
-  color: white;
-  border: none;
-  border-radius: 20px;
-  padding: 8px 15px;
+
+.botao-noticia{
+  color: black;
+  padding: 8px;
   cursor: pointer;
   font-weight: bold;
   display: flex;
@@ -102,20 +94,6 @@ body {
   gap: 5px;
 }
 
-.ponto-vermelho {
-  width: 8px;
-  height: 8px;
-  background-color: white;
-  border-radius: 50%;
-  display: inline-block;
-  animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-  0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
-  70% { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
-}
 
 .conteudo-principal {
   padding: 30px;
