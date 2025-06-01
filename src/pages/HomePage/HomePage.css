@@ -90,7 +90,7 @@ body {
 }
 
 .botao-denuncia {
-  background-color: #ff4500; /* Cor de destaque */
+  background-color: #ff1900; /* Cor de destaque */
   color: white;
   border: none;
   border-radius: 20px;
@@ -121,9 +121,7 @@ body {
   padding: 30px;
   max-width: 1200px;
   margin: 20px auto;
-  background-color: #fff;
   border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   flex-grow: 1; /* Garante que o conteúdo ocupe o espaço restante */
 }
 
@@ -131,7 +129,7 @@ body {
   font-size: 1.8em;
   color: #333;
   margin-bottom: 25px;
-  border-bottom: 2px solid #ff4500;
+  border-bottom: 2px solid #ff1900;
   padding-bottom: 10px;
 }
 

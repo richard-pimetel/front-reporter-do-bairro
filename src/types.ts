@@ -1,14 +1,42 @@
-export interface NewsItem {
-  id?: number;
-  title: string;
-  summary: string;
-  content?: string;
-  imageUrl: string;
-  publishedAt: string;
-  category?: string;
-  author?: string;
+export interface NoticiaItem {
+  id?: number
+  titulo: string
+  categorias: Categoria[]
+  urls_midia?: string[]
+  link: string
+  conteudo: string
+  data_postagem?: Date
+  User?: Usuario
+  tbl_usuario_id?: number
+  endereco: Endereco
 }
 
+
+export interface ListaNoticiasProps {
+  noticias: NoticiaItem[];
+}
+export interface Categoria {
+  id?: number;
+  nome: string;
+  descricao?: string;
+  sigla?: string;
+}
+
+export interface Endereco {
+  id?: number
+  cep: string
+  logradouro?: string
+  complemento?: string
+  bairro?: string
+  localidade?: string
+  uf?: string
+  ibge?: string
+  gia?: string
+  siafi?: string
+  display_name: string
+  lat: number
+  lon: number
+}
 export interface Usuario {
   id: number
   nome: string
@@ -17,21 +45,6 @@ export interface Usuario {
   foto_perfil: string
   biografia: string | null
 }
-
-// Remove o campo "ddd" do retorno
-export type ViaCepResponse = Omit<{
-  cep: string
-  logradouro: string
-  complemento: string
-  bairro: string
-  localidade: string
-  uf: string
-  ibge: string
-  gia: string
-  siafi: string
-  ddd: string
-}, 'ddd'>
-
 export type Coordenadas = {
   lat: number
   lon: number
@@ -48,7 +61,6 @@ export type CoordenadasComEndereco = {
   display_name: string
   cep: string | null
 }
-
 
 // Tipos retornados pelas APIs
 export type NominatimResponseItem = {

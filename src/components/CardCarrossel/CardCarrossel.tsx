@@ -1,44 +1,49 @@
-// src/components/CardCarrossel.tsx
-import React, { useState, useEffect } from 'react';
-import './CardCarrossel.css'; // Vamos criar este arquivo CSS
+import { useState, useEffect } from 'react'
+import './CardCarrossel.css'
+import { NoticiaItem } from '../../types'
 
+// CardCarrosselProps agora recebe diretamente um NoticiaItem
 interface CardCarrosselProps {
-  titulo: string;
-  categoria: string;
-  imagens: string[]; // Lista de URLs de imagens para o carrossel
-  link: string;
-  tempo?: string; // Tempo/data opcional
-  ehCardPrincipal?: boolean; // Para diferenciar o estilo do card principal
+  noticia: NoticiaItem
+  ehCardPrincipal?: boolean
 }
 
-const CardCarrossel: React.FC<CardCarrosselProps> = ({ titulo, categoria, imagens, link, tempo, ehCardPrincipal }) => {
+function CardCarrossel({ noticia, ehCardPrincipal }: CardCarrosselProps) {
+  // Garante que urls_midia é um array, mesmo que opcional
+  const urlsMidia = noticia.urls_midia || [];
   const [indiceImagemAtual, setIndiceImagemAtual] = useState(0);
 
   useEffect(() => {
-    if (imagens.length > 1) {
+    if (urlsMidia.length > 1) {
       const intervalo = setInterval(() => {
-        setIndiceImagemAtual((prevIndice) => (prevIndice + 1) % imagens.length);
-      }, 2000); // Troca de imagem a cada 2 segundos
+        setIndiceImagemAtual((prevIndice) => (prevIndice + 1) % urlsMidia.length);
+      }, 2000);
       return () => clearInterval(intervalo);
     }
-  }, [imagens]);
+  }, [urlsMidia]);
 
-  const estiloBackground = imagens.length > 0
-    ? { backgroundImage: `url(${imagens[indiceImagemAtual]})` }
+  const estiloBackground = urlsMidia.length > 0
+    ? { backgroundImage: `url(${urlsMidia[indiceImagemAtual]})` }
     : {};
 
   const classesCard = `card-carrossel ${ehCardPrincipal ? 'card-carrossel-principal' : ''}`;
 
   return (
-    <a href={link} className={classesCard} style={estiloBackground}>
+    <a href={noticia.link} className={classesCard} style={estiloBackground}>
       <div className="card-carrossel-overlay"></div>
       <div className="card-carrossel-conteudo">
-        <span className="card-carrossel-categoria">{categoria}</span>
-        <h3 className="card-carrossel-titulo">{titulo}</h3>
-        {tempo && <p className="card-carrossel-tempo">{tempo}</p>}
+        {/* Use a primeira categoria se existir, senão um fallback */}
+        <span className="card-carrossel-categoria">{noticia.categorias[0]?.nome || 'Sem Categoria'}</span>
+        <h3 className="card-carrossel-titulo">{noticia.titulo}</h3>
+        {/* Formate a data_postagem para exibir como string */}
+        {noticia.data_postagem && (
+          <p className="card-carrossel-tempo">
+            {noticia.data_postagem.toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+          </p>
+        )}
       </div>
     </a>
   );
-};
+}
 
 export default CardCarrossel;

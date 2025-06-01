@@ -12,10 +12,12 @@ function InputEndereco({ setResultadoEndereco }: InputEnderecoProps) {
 
   const handleBuscar = async () => {
     const resultado = await buscarCoordenadasComEndereco(endereco)
+    
 
     if (resultado) {
+      setEndereco(resultado.display_name)
       console.log("Resultado completo:", resultado)
-      setResultadoEndereco(resultado) // agora deve funcionar
+      setResultadoEndereco(resultado) 
     } else {
       alert("Endereço não encontrado.")
     }

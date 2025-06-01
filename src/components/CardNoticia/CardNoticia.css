@@ -32,7 +32,7 @@
   position: absolute;
   top: 10px;
   left: 10px;
-  background-color: #ff4500; /* Cor de exemplo */
+  background-color: #ff1900; /* Cor de exemplo */
   color: white;
   padding: 4px 8px;
   border-radius: 4px;
@@ -63,7 +63,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 3; /* Limita a 3 linhas */
   -webkit-box-orient: vertical;
 }
 
