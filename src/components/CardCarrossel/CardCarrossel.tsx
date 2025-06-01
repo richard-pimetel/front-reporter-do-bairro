@@ -1,45 +1,51 @@
-import { useState, useEffect } from 'react'
 import './CardCarrossel.css'
-import { NoticiaItem } from '../../types'
+import { NoticiaItem, Categoria } from '../../types'
 
-// CardCarrosselProps agora recebe diretamente um NoticiaItem
 interface CardCarrosselProps {
   noticia: NoticiaItem
-  ehCardPrincipal?: boolean
+  ehCardPrincipal: boolean
 }
 
 function CardCarrossel({ noticia, ehCardPrincipal }: CardCarrosselProps) {
-  // Garante que urls_midia é um array, mesmo que opcional
-  const urlsMidia = noticia.urls_midia || [];
-  const [indiceImagemAtual, setIndiceImagemAtual] = useState(0);
+  const imageUrl =
+    noticia.urls_midia && noticia.urls_midia.length > 0
+      ? noticia.urls_midia[0].url_midia
+      : ehCardPrincipal
+        ? 'https://via.placeholder.com/1200x600/CCCCCC/FFFFFF?text=Destaque+Sem+Imagem'
+        : 'https://via.placeholder.com/600x400/CCCCCC/FFFFFF?text=Lateral+Sem+Imagem';
 
-  useEffect(() => {
-    if (urlsMidia.length > 1) {
-      const intervalo = setInterval(() => {
-        setIndiceImagemAtual((prevIndice) => (prevIndice + 1) % urlsMidia.length);
-      }, 2000);
-      return () => clearInterval(intervalo);
+  let dataFormatada = 'Data Indisponível';
+  if (noticia.data_postagem) {
+    try {
+      const dataObj = new Date(noticia.data_postagem);
+      if (!isNaN(dataObj.getTime())) {
+        dataFormatada = dataObj.toLocaleDateString('pt-BR', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
+        });
+      }
+    } catch (e) {
+      console.error('Erro ao formatar data no CardCarrossel:', e);
     }
-  }, [urlsMidia]);
+  }
 
-  const estiloBackground = urlsMidia.length > 0
-    ? { backgroundImage: `url(${urlsMidia[indiceImagemAtual]})` }
-    : {};
-
-  const classesCard = `card-carrossel ${ehCardPrincipal ? 'card-carrossel-principal' : ''}`;
+  const linkNoticia = `/noticia/${noticia.id}`;
 
   return (
-    <a href={noticia.link} className={classesCard} style={estiloBackground}>
-      <div className="card-carrossel-overlay"></div>
-      <div className="card-carrossel-conteudo">
-        {/* Use a primeira categoria se existir, senão um fallback */}
-        <span className="card-carrossel-categoria">{noticia.categorias[0]?.nome || 'Sem Categoria'}</span>
+    <a href={linkNoticia} className={`card-carrossel ${ehCardPrincipal ? 'card-principal' : 'card-lateral'}`}>
+      <img src={imageUrl} alt={noticia.titulo} className="card-carrossel-imagem" />
+      <div className="card-carrossel-overlay">
+        <span className="card-carrossel-categoria">
+          {noticia.categorias && noticia.categorias.length > 0
+            ? (noticia.categorias[0] as Categoria).nome
+            : 'Geral'}
+        </span>
         <h3 className="card-carrossel-titulo">{noticia.titulo}</h3>
-        {/* Formate a data_postagem para exibir como string */}
-        {noticia.data_postagem && (
-          <p className="card-carrossel-tempo">
-            {noticia.data_postagem.toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
-          </p>
+        <p className="card-carrossel-data">{dataFormatada}</p>
+        {/* CORREÇÃO AQUI: Verifique se noticia.endereco existe antes de acessá-lo */}
+        {noticia.endereco && noticia.endereco.display_name && (
+          <p className="card-carrossel-endereco">{noticia.endereco.display_name}</p>
         )}
       </div>
     </a>

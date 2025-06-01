@@ -1,17 +1,16 @@
-// src/api/categories.ts
-import { Categoria } from '../../types'; // Ajuste o caminho se necessário
+import { CategoriaResponse  } from '../../types'
 import BASE_URL from '../config'
 
-export async function fetchCategories(): Promise<Categoria[]> {
+export async function getCategories(): Promise<CategoriaResponse | null> {
   try {
-    const response = await fetch(`${BASE_URL}/categorias`); // Exemplo de endpoint
+    const response = await fetch(`${BASE_URL}/categoria`)
     if (!response.ok) {
-      throw new Error(`Erro ao buscar categorias: ${response.statusText}`);
+      throw new Error(`Erro ao buscar categorias: ${response.statusText}`)
     }
-    const data: Categoria[] = await response.json();
+    const data: CategoriaResponse = await response.json();
     return data;
   } catch (error) {
-    console.error("Erro ao buscar categorias:", error);
-    return []; // Retorna um array vazio em caso de erro
+    console.error("Erro ao buscar categorias:", error)
+    return null
   }
 }

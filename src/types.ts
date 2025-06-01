@@ -2,23 +2,40 @@ export interface NoticiaItem {
   id?: number
   titulo: string
   categorias: Categoria[] | number[]
-  urls_midia?: string[]
+  urls_midia?: UrlMidiaItem[] | null
   conteudo: string
   data_postagem: string
   User?: Usuario
   tbl_usuario_id?: number
   endereco: Endereco
 }
-
+export interface UrlMidiaItem {
+  id?: number;
+  url_midia: string;
+  tbl_noticia_id?: number;
+}
 
 export interface ListaNoticiasProps {
   noticias: NoticiaItem[];
 }
 export interface Categoria {
-  id?: number;
+  id: number;
   nome: string;
-  descricao?: string;
-  sigla?: string;
+  descricao: string;
+  sigla: string;
+}
+
+export interface CategoriaResponse {
+  status: boolean;
+  status_code: number;
+  items: number;
+  categorias: Categoria[];
+}
+export interface NoticiaResponse {
+  status: boolean
+  status_code: number
+  items: number
+  noticias: NoticiaItem[]
 }
 
 export interface Endereco {

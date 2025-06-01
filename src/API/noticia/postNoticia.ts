@@ -4,7 +4,7 @@ import BASE_URL from '../config'
 
 export async function postNoticia(noticiaData: NoticiaCreatePayload): Promise<NoticiaItem | null> {
   try {
-    const response = await fetch(`${BASE_URL}/noticias`, { 
+    const response = await fetch(`${BASE_URL}/noticia`, { 
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

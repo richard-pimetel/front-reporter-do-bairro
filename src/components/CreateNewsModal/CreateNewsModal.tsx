@@ -1,11 +1,11 @@
-// src/components/CreateNewsModal/CreateNewsModal.tsx
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './CreateNewsModal.css';
 import InputEndereco from '../InputEndereco/inputEndereco';
 import CategoryButtons from '../CategoryButtons/CategoryButtons';
-import { Endereco, NoticiaCreatePayload } from '../../types';
+import { Endereco, NoticiaCreatePayload, Categoria } from '../../types';
 import { uploadFileToAzure } from '../../services/azureUpload';
 import { useAuth } from '../../contexts/AuthContext';
+import { getCategories } from '../../API/categoria/getCategoria';
 
 interface CreateNewsModalProps {
   isOpen: boolean;
@@ -21,72 +21,31 @@ function CreateNewsModal({ isOpen, onClose, onSave }: CreateNewsModalProps) {
   const [enderecoSelecionado, setEnderecoSelecionado] = useState<Endereco | null>(null);
   const [imageFiles, setImageFiles] = useState<FileList | null>(null);
   const [imageUrls, setImageUrls] = useState<string>('');
+  const [availableCategories, setAvailableCategories] = useState<Categoria[]>([]);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  if (!isOpen) return null;
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setImageFiles(event.target.files);
-  };
-
-  const handleSave = async () => {
-    if (!titulo || !conteudo || selectedCategoryIds.length === 0 || !enderecoSelecionado || !user?.id) {
-      alert('Por favor, preencha todos os campos obrigatórios: Título, Conteúdo, Categorias e Endereço.');
-      return;
-    }
-
-    const allMediaUrls: string[] = [];
-
-    // 1. Upload de arquivos locais
-    if (imageFiles && imageFiles.length > 0) {
-      for (let i = 0; i < imageFiles.length; i++) {
-        const file = imageFiles[i];
-        // Parâmetros de upload do Azure - SUBSTITUA PELOS SEUS VALORES REAIS
-        const uploadParams = {
-          file: file,
-          storageAccount: 'tutorialupload', // SEU STORAGE ACCOUNT
-          sasToken: 'sp=racwl&st=2025-05-13T14:27:31Z&se=2025-05-30T22:27:31Z&sv=2024-11-04&sr=c&sig=Jom%2FgMFugyhtw5SZokN0Pe%2BQf7c2ciA8KP9SckR%2FPfc%3D', // SEU SAS TOKEN
-          containerName: 'fotos', // SEU CONTAINER NAME
-        };
-        const uploadedUrl = await uploadFileToAzure(uploadParams);
-        if (uploadedUrl) {
-          allMediaUrls.push(uploadedUrl);
-        } else {
-          alert(`Falha ao carregar o arquivo: ${file.name}`);
-          return;
+  // Carrega as categorias quando o modal é aberto (isOpen muda para true)
+  useEffect(() => {
+    if (isOpen) {
+      const fetchCategories = async () => {
+        try { // Adicionado try-catch para lidar com erros na busca de categorias
+          const response = await getCategories();
+          if (response && response.categorias) {
+            setAvailableCategories(response.categorias);
+          } else {
+            console.error('Falha ao carregar categorias: Resposta inválida.');
+            setAvailableCategories([]);
+          }
+        } catch (error) {
+          console.error('Erro ao buscar categorias:', error);
+          setAvailableCategories([]);
+          alert('Erro ao carregar categorias. Por favor, tente novamente mais tarde.');
         }
-      }
-    }
-
-    // 2. Adicionar URLs digitadas
-    if (imageUrls.trim()) {
-      const urlsFromInput = imageUrls.split('\n').map(url => url.trim()).filter(url => url !== '');
-      allMediaUrls.push(...urlsFromInput);
-    }
-
-    // Pega a data e hora atual do navegador
-    const currentDateTime = new Date().toISOString(); // Formato ISO 8601 (ex: "2023-10-27T10:30:00.000Z")
-
-    const noticiaData: NoticiaCreatePayload = {
-      titulo,
-      conteudo,
-      tbl_usuario_id: user.id,
-      endereco: {
-        cep: enderecoSelecionado.cep || '00000-000',
-        display_name: enderecoSelecionado.display_name,
-        lat: enderecoSelecionado.lat,
-        lon: enderecoSelecionado.lon,
-      },
-      urls_midia: allMediaUrls.length > 0 ? allMediaUrls : undefined,
-      categorias: selectedCategoryIds,
-      data_postagem: currentDateTime // Adiciona a data/hora atual
-    };
-
-    try {
-      await onSave(noticiaData);
-      onClose();
-      // Limpa os campos
+      };
+      fetchCategories();
+    } else {
+      // Limpar campos e estados quando o modal é fechado
       setTitulo('');
       setConteudo('');
       setSelectedCategoryIds([]);
@@ -96,9 +55,88 @@ function CreateNewsModal({ isOpen, onClose, onSave }: CreateNewsModalProps) {
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
+      setAvailableCategories([]);
+    }
+  }, [isOpen]);
+
+  if (!isOpen) return null;
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setImageFiles(event.target.files);
+  };
+
+  const handleSave = async () => {
+    // Validação mais robusta para enderecoSelecionado
+    if (!titulo || !conteudo || selectedCategoryIds.length === 0 || !user?.id ||
+        !enderecoSelecionado || !enderecoSelecionado.cep || !enderecoSelecionado.display_name ||
+        enderecoSelecionado.lat === undefined || enderecoSelecionado.lon === undefined) {
+      alert('Por favor, preencha todos os campos obrigatórios: Título, Conteúdo, Categorias, Endereço e CEP.');
+      return;
+    }
+
+    const allMediaUrls: string[] = [];
+
+    // 1. Upload de arquivos locais para Azure Blob Storage
+    if (imageFiles && imageFiles.length > 0) {
+      for (let i = 0; i < imageFiles.length; i++) {
+        const file = imageFiles[i]
+        const sasToken = 'sp=racwl&st=2025-06-01T19:43:40Z&se=2025-06-03T15:00:00Z&sv=2024-11-04&sr=c&sig=b2%2BtTEfszccKONrY0VlRWkLBp74utlkwa7ycrVfnK6U%3D'
+
+        const uploadParams = {
+          file: file,
+          storageAccount: 'imgevideodenoticias',
+          sasToken: sasToken,
+          containerName: 'imagens',
+        };
+
+        try {
+          const uploadedUrl = await uploadFileToAzure(uploadParams);
+          if (uploadedUrl) {
+            allMediaUrls.push(uploadedUrl);
+          } else {
+            alert(`Falha ao carregar o arquivo: ${file.name}. URL de upload não retornada.`);
+            return; // Interrompe o processo se um upload falhar
+          }
+        } catch (uploadError) {
+          console.error(`Erro no upload do arquivo ${file.name} para Azure Blob Storage:`, uploadError);
+          alert(`Erro no upload do arquivo ${file.name}. Verifique o SAS Token e permissões.`);
+          return; // Interrompe o processo se um upload falhar
+        }
+      }
+    }
+
+    // 2. Adicionar URLs digitadas
+    if (imageUrls.trim()) {
+      const urlsFromInput = imageUrls.split('\n')
+                                     .map(url => url.trim())
+                                     .filter(url => url !== '');
+      allMediaUrls.push(...urlsFromInput);
+    }
+
+    // Formata a data para "YYYY-MM-DD"
+    const dataPostagemFormatada = new Date().toISOString().slice(0, 10);
+
+    const noticiaData: NoticiaCreatePayload = {
+      titulo,
+      conteudo,
+      tbl_usuario_id: user.id,
+      endereco: {
+        cep: enderecoSelecionado.cep, // Já validado como string não-vazia acima
+        display_name: enderecoSelecionado.display_name,
+        lat: enderecoSelecionado.lat,
+        lon: enderecoSelecionado.lon,
+      },
+      urls_midia: allMediaUrls.length > 0 ? allMediaUrls : undefined, // Permite undefined se não houver mídias
+      categorias: selectedCategoryIds,
+      data_postagem: dataPostagemFormatada, // Usa a data formatada
+    };
+
+    try {
+      await onSave(noticiaData);
+      onClose();
     } catch (error) {
       console.error("Erro ao salvar notícia:", error);
-      alert('Erro ao criar a notícia. Tente novamente.');
+      alert('Erro ao criar a notícia. Verifique o console para mais detalhes.');
     }
   };
 
@@ -127,6 +165,7 @@ function CreateNewsModal({ isOpen, onClose, onSave }: CreateNewsModalProps) {
 
           <label>Categorias *</label>
           <CategoryButtons
+            categories={availableCategories}
             onCategoryChange={setSelectedCategoryIds}
             initialSelectedCategories={selectedCategoryIds}
           />
@@ -139,7 +178,10 @@ function CreateNewsModal({ isOpen, onClose, onSave }: CreateNewsModalProps) {
             rows={6}
             required
           ></textarea>
+
           <label>Endereço *</label>
+          {/* setResultadoEndereco espera CoordenadasComEndereco, mas Endereco é o que você precisa */}
+          {/* Se InputEndereco já retorna Endereco, a tipagem está ok. */}
           <InputEndereco setResultadoEndereco={setEnderecoSelecionado} />
           {enderecoSelecionado && (
             <p className="endereco-selecionado">Endereço selecionado: {enderecoSelecionado.display_name}</p>
@@ -170,4 +212,4 @@ function CreateNewsModal({ isOpen, onClose, onSave }: CreateNewsModalProps) {
   );
 }
 
-export default CreateNewsModal
+export default CreateNewsModal;

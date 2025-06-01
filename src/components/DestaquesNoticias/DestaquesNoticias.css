@@ -2,11 +2,19 @@
   display: flex;
   gap: 20px;
   margin-bottom: 40px;
+  /* Adicione isso para garantir que o container não exceda a largura de seu pai,
+     e que os flex items respeitem o espaço disponível */
+  width: 100%; /* Garante que o container ocupe toda a largura disponível */
+  box-sizing: border-box; /* Garante que padding e border sejam incluídos na largura total */
 }
 
 .card-principal-wrapper {
   flex: 2; /* Ocupa 2 partes do espaço disponível */
   height: 400px; /* Altura fixa para o card principal */
+  /* Adicionar min-width: 0 para permitir que o flex item diminua além do seu conteúdo */
+  min-width: 0;
+  /* Garante que qualquer conteúdo que vaze seja cortado */
+  overflow: hidden;
 }
 
 .cards-laterais-wrapper {
@@ -14,21 +22,51 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  /* Adicionar min-width: 0 */
+  min-width: 0;
+  overflow: hidden;
 }
 
 .cards-laterais-wrapper .card-carrossel {
   height: 190px; /* Aproximadamente metade da altura para cada card lateral */
+  /* Adicionar min-width: 0 e overflow: hidden para os cards individuais se necessário */
+  min-width: 0;
+  overflow: hidden;
 }
+
+/* É fundamental que as imagens dentro dos cards se ajustem */
+.card-carrossel .card-carrossel-imagem {
+  width: 100%; /* Garante que a imagem ocupe toda a largura do seu contêiner */
+  height: 100%; /* Garante que a imagem ocupe toda a altura do seu contêiner */
+  object-fit: cover; /* Recorta a imagem para preencher o contêiner sem distorcer */
+  display: block; /* Remove o espaço extra abaixo da imagem */
+}
+
+/* Opcional: Se o CardNoticia for usado em outros lugares sem o CardCarrossel,
+   aplique as mesmas regras de imagem no .card-noticia-imagem */
+.card-noticia-imagem {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
 
 @media (max-width: 900px) {
   .destaques-noticias-container {
     flex-direction: column;
+    /* Remover o width: 100% aqui se você quiser que ele seja fluido no mobile,
+       mas mantê-lo é geralmente seguro */
+    width: 100%;
   }
 
   .card-principal-wrapper,
   .cards-laterais-wrapper {
     flex: none;
     width: 100%;
+    /* Mantenha o min-width: 0 e overflow: hidden também no media query */
+    min-width: 0;
+    overflow: hidden;
   }
 
   .card-principal-wrapper {
@@ -37,5 +75,8 @@
 
   .cards-laterais-wrapper .card-carrossel {
     height: 150px; /* Ajuste de altura para telas menores */
+    /* Mantenha o min-width: 0 e overflow: hidden também no media query */
+    min-width: 0;
+    overflow: hidden;
   }
 }
