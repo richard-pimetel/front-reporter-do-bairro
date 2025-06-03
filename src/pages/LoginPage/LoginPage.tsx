@@ -33,7 +33,7 @@ function LoginPage() {
       if (response?.status && response.usuario) {
         login(response.usuario)
         setAuthSuccess(true)
-        setTimeout(() => navigate('/'), 1500)
+        navigate('/')
       } else {
         alert("Email ou senha incorretos.")
       }
@@ -56,7 +56,7 @@ function LoginPage() {
       if (response?.status && response.usuario) {
         login(response.usuario)
         setAuthSuccess(true)
-        setTimeout(() => navigate('/'), 1500)
+        navigate('/')
       } else {
         alert("Erro ao cadastrar. Verifique os dados e tente novamente.")
       }
@@ -80,16 +80,7 @@ function LoginPage() {
           </button>
         </div>
 
-        {authSuccess ? (
-          <div className="auth-success">
-            <div className="success-message">
-              <CheckCircle size={48} className="icon" />
-              <h3>Login realizado com sucesso!</h3>
-              <p>Bem-vindo de volta, {formData.email.split('@')[0]}!</p>
-            </div>
-          </div>
-        ) : (
-          <>
+
             <form onSubmit={handleSubmit} className="form">
               {!isLogin && (
                 <>
@@ -201,8 +192,6 @@ function LoginPage() {
                 <a href="#" className="footer-link">Política de Privacidade</a>
               </p>
             </div>
-          </>
-        )}
       </div>
     </div>
   )
