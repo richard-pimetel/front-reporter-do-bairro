@@ -71,10 +71,10 @@ function CreateNewsModal({ isOpen, onClose, onSave }: CreateNewsModalProps) {
         !enderecoSelecionado || !enderecoSelecionado.cep || !enderecoSelecionado.display_name ||
         enderecoSelecionado.lat === undefined || enderecoSelecionado.lon === undefined) {
       alert('Por favor, preencha todos os campos obrigatórios: Título, Conteúdo, Categorias, Endereço e CEP.');
-      return;
+      return
     }
 
-    const allMediaUrls: string[] = [];
+    const allMediaUrls: string[] = []
 
     // 1. Upload de arquivos locais para Azure Blob Storage
     if (imageFiles && imageFiles.length > 0) {

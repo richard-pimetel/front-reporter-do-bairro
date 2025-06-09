@@ -97,10 +97,11 @@ body {
 
 .conteudo-principal {
   padding: 30px;
-  max-width: 1200px;
+  min-width: 60%;
+  max-width: 90%;
   margin: 20px auto;
   border-radius: 8px;
-  flex-grow: 1; /* Garante que o conteúdo ocupe o espaço restante */
+  flex-grow: 1; 
 }
 
 .titulo-secao {
