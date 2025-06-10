@@ -80,7 +80,7 @@ function CreateNewsModal({ isOpen, onClose, onSave }: CreateNewsModalProps) {
     if (imageFiles && imageFiles.length > 0) {
       for (let i = 0; i < imageFiles.length; i++) {
         const file = imageFiles[i]
-        const sasToken = 'sp=racwl&st=2025-06-01T19:43:40Z&se=2025-06-03T15:00:00Z&sv=2024-11-04&sr=c&sig=b2%2BtTEfszccKONrY0VlRWkLBp74utlkwa7ycrVfnK6U%3D'
+        const sasToken = 'sp=racwl&st=2025-06-10T02:35:11Z&se=2025-06-10T10:35:11Z&sv=2024-11-04&sr=c&sig=dvVA1a55li0hkl9MGNYZxwwIhneiVD%2F2yup3Zi%2BO2PU%3D'
 
         const uploadParams = {
           file: file,

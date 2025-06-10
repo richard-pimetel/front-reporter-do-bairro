@@ -8,6 +8,7 @@ export interface NoticiaItem {
   User?: Usuario
   tbl_usuario_id?: number
   endereco: Endereco
+  comentarios?: ComentarioItem[]
 }
 export interface UrlMidiaItem {
   id?: number;
@@ -110,4 +111,23 @@ export type ReverseNominatimResponse = {
   name?: string
   address?: Record<string, any>
   [key: string]: any
+}
+
+export interface ComentarioItem {
+  id?: number;
+  conteudo: string;
+  tbl_usuario_id: number;
+  tbl_noticia_id: number;
+  data_postagem: string;
+  User?: {
+    id: number;
+    nome: string;
+    foto_perfil: string;
+  }; // Opcional, para quando o backend envia
+}
+
+export interface ComentarioResponse {
+  status: boolean;
+  status_code: number;
+  comentarios: ComentarioItem[];
 }

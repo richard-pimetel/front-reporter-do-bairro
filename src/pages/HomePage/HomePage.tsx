@@ -1,29 +1,30 @@
 // src/pages/HomePage/HomePage.tsx
-import { useState, useEffect } from 'react'; // Importar useEffect
+
+import { useState, useEffect } from 'react';
 import DestaquesNoticias from '../../components/DestaquesNoticias/DestaquesNoticias';
 import ListaNoticias from '../../components/ListaNoticias/ListaNoticias';
 import CreateNewsModal from '../../components/CreateNewsModal/CreateNewsModal';
+import Header from '../../components/Header/Header'; // Importar o novo componente Header
 import './HomePage.css';
+
 import { NoticiaItem, NoticiaCreatePayload } from '../../types';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { postNoticia } from '../../API/noticia/postNoticia';
-import { getAllNoticia } from '../../API/noticia/getAllNoticia'; // Já importado
+import { getAllNoticia } from '../../API/noticia/getAllNoticia';
 
 function HomePage() {
-  const { logout, isLoggedIn } = useAuth();
+  const { isLoggedIn } = useAuth(); // Apenas isLoggedIn é necessário aqui para o modal
   const navigate = useNavigate();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [allNews, setAllNews] = useState<NoticiaItem[]>([]); // Inicializa com array vazio
-  const [loadingNews, setLoadingNews] = useState<boolean>(true); // Estado de carregamento
+  const [isModalOpen, setIsModalOpen] = useState(false); // <--- CONTINUA NO HOMEPAGE
+  const [allNews, setAllNews] = useState<NoticiaItem[]>([]);
+  const [loadingNews, setLoadingNews] = useState<boolean>(true);
 
-  // Efeito para carregar as notícias ao montar o componente
   useEffect(() => {
     const fetchNews = async () => {
       setLoadingNews(true);
       const response = await getAllNoticia();
       if (response && response.noticias) {
-        // Ordenar as notícias pela data_postagem em ordem decrescente (mais recente primeiro)
         const sortedNews = response.noticias.sort((a, b) =>
           new Date(b.data_postagem).getTime() - new Date(a.data_postagem).getTime()
         );
@@ -36,12 +37,13 @@ function HomePage() {
     };
 
     fetchNews();
-  }, []); // Array de dependências vazio para rodar apenas uma vez na montagem
+  }, []);
 
   const noticiasDestaque = allNews.slice(0, 3);
   const ultimasNoticias = allNews.slice(3);
 
-  const handleOpenModal = () => {
+  // Esta função será passada para o Header
+  const handleOpenCreateNewsModal = () => { // <--- FUNÇÃO PERMANECE AQUI
     if (isLoggedIn) {
       setIsModalOpen(true);
     } else {
@@ -49,19 +51,15 @@ function HomePage() {
     }
   };
 
-  const handleCloseModal = () => {
+  const handleCloseModal = () => { // <--- FUNÇÃO PERMANECE AQUI
     setIsModalOpen(false);
   };
 
-  const handleSaveNews = async (noticiaData: NoticiaCreatePayload) => {
+  const handleSaveNews = async (noticiaData: NoticiaCreatePayload) => { // <--- FUNÇÃO PERMANECE AQUI
     console.log("Dados para enviar:", noticiaData);
     try {
-      const novaNoticia = await postNoticia(noticiaData); // Chama a função da API
+      const novaNoticia = await postNoticia(noticiaData);
       if (novaNoticia) {
-        // Para garantir que a nova notícia esteja no topo e a lista seja atualizada
-        // É melhor refazer a chamada getAllNoticia para ter a lista mais atualizada do backend
-        // ou adicionar a nova notícia e reordenar a lista localmente.
-        // Por simplicidade, vamos adicionar e reordenar localmente por enquanto.
         setAllNews((prevNews) => {
           const updatedNews = [novaNoticia, ...prevNews];
           return updatedNews.sort((a, b) =>
@@ -69,6 +67,7 @@ function HomePage() {
           );
         });
         alert('Notícia criada com sucesso!');
+        setIsModalOpen(false); // Fechar modal após salvar
       } else {
         alert('Falha ao criar notícia. Verifique o console para detalhes.');
       }
@@ -78,45 +77,16 @@ function HomePage() {
     }
   };
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
-
   return (
     <div className={`homepage ${isModalOpen ? 'modal-open' : ''}`}>
-      <header className="cabecalho">
-        <div className="cabecalho-esquerda">
-          <button className="menu-hamburguer">
-            <ion-icon name="menu-sharp"></ion-icon>
-          </button>
-          <span className="nome-app">BairroNews</span>
-        </div>
-        <div className="cabecalho-direita">
-          <div className="cabecalho-busca">
-            <input type="text" placeholder="Seu Bairro: 24ºC Parcialmente nublado" className="campo-busca" />
-            <button className="icone-busca"><ion-icon name="search-outline"></ion-icon></button>
-          </div>
-          <button className="botao-denuncia" onClick={handleOpenModal}>
-            <ion-icon name="navigate"></ion-icon>
-          </button>
-          <button><ion-icon name="notifications-outline"></ion-icon></button>
-          <button><ion-icon name="settings-outline"></ion-icon></button>
-
-          {isLoggedIn ? (
-            <>
-              <button><ion-icon name="person-circle-outline"></ion-icon></button>
-              <button onClick={handleLogout} className="botao-logout">Sair</button>
-            </>
-          ) : (
-            <button onClick={() => navigate('/login')} className="botao-login">Login</button>
-          )}
-        </div>
-      </header>
+      {/* Usar o componente Header e passar a função para ele */}
+      <Header
+        onOpenCreateNewsModal={handleOpenCreateNewsModal} // <--- PASSANDO A FUNÇÃO COMO PROP
+      />
 
       <main className="conteudo-principal">
         {loadingNews ? (
-          <p>Carregando notícias...</p> // Exibe um status de carregamento
+          <p>Carregando notícias...</p>
         ) : (
           <>
             <DestaquesNoticias noticias={noticiasDestaque} />
@@ -127,6 +97,7 @@ function HomePage() {
         )}
       </main>
 
+      {/* O CreateNewsModal continua sendo renderizado no HomePage */}
       <CreateNewsModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
