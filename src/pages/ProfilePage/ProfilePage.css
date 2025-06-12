@@ -1,0 +1,186 @@
+/* src/pages/ProfilePage/ProfilePage.css */
+
+/* Estilos Globais da Página */
+.profile-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f0f2f5; /* Um cinza claro suave, comum em apps modernos */
+    font-family: 'Arial', sans-serif; /* Use a fonte principal do seu site */
+    color: #333; /* Cor de texto padrão */
+}
+
+/* Conteúdo Principal (Centralizado) */
+.profile-content {
+    flex-grow: 1; /* Permite que ocupe o espaço restante */
+    display: flex;
+    flex-direction: column; /* Organiza os cards verticalmente */
+    align-items: center; /* Centraliza horizontalmente */
+    padding: 30px 20px; /* Espaçamento interno */
+    gap: 30px; /* Espaçamento entre o card do perfil e a seção de posts */
+}
+
+/* Card do Perfil do Usuário */
+.profile-card {
+    background-color: #ffffff;
+    border-radius: 12px; /* Bordas mais arredondadas */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Sombra mais suave e moderna */
+    padding: 30px;
+    width: 100%;
+    max-width: 700px; /* Largura máxima para o card do perfil */
+    text-align: center;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    position: relative; /* Para posicionar elementos internos se necessário */
+    overflow: hidden; /* Garante que elementos arredondados não vazem */
+}
+
+/* Efeito ao passar o mouse */
+.profile-card:hover {
+    transform: translateY(-5px); /* Efeito sutil de elevação */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); /* Sombra mais pronunciada ao passar o mouse */
+}
+
+/* Cabeçalho do Perfil (Foto e Nome) */
+.profile-header {
+    margin-bottom: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Foto de Perfil (Avatar) */
+.profile-avatar {
+    width: 160px; /* Tamanho ligeiramente maior */
+    height: 160px;
+    border-radius: 50%; /* Perfeitamente redondo */
+    object-fit: cover;
+    border: 5px solid #4CAF50; /* Borda um pouco mais grossa e cor vibrante */
+    box-shadow: 0 0 0 7px rgba(76, 175, 80, 0.3); /* Anel externo sutil */
+    margin-bottom: 20px;
+    transition: all 0.3s ease-in-out;
+}
+
+.profile-avatar:hover {
+    transform: scale(1.05); /* Efeito de zoom ao passar o mouse */
+    border-color: #388E3C; /* Borda mais escura no hover */
+}
+
+/* Nome do Usuário */
+.profile-name {
+    font-size: 2.6em; /* Aumenta um pouco o tamanho do nome */
+    color: #2c3e50; /* Cor mais escura para o nome */
+    margin-bottom: 15px;
+    font-weight: 700; /* Mais negrito */
+    letter-spacing: -0.5px; /* Espaçamento sutil para melhor leitura */
+}
+
+/* Detalhes do Perfil (Biografia) */
+.profile-details {
+    text-align: left; /* Alinha a biografia à esquerda */
+    max-width: 500px; /* Limita a largura do texto da biografia */
+    margin: 0 auto; /* Centraliza o bloco da biografia */
+}
+
+.profile-details p {
+    font-size: 1.1em;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 0; /* Remove margem inferior padrão de parágrafo */
+}
+
+.profile-details p strong {
+    color: #333;
+    margin-right: 8px;
+    font-weight: 600; /* Negrito um pouco mais suave */
+}
+
+/* Seção de Publicações do Usuário (Mesmo que esteja vazia por enquanto) */
+.user-posts-section {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    width: 100%;
+    max-width: 900px; /* Mais larga para acomodar várias notícias */
+    text-align: left;
+}
+
+.user-posts-section .titulo-secao {
+    font-size: 2.2em;
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 30px;
+    font-weight: 700;
+}
+
+.user-posts-section p {
+    text-align: center;
+    color: #777;
+    font-style: italic;
+    margin-top: 20px;
+}
+
+/* Estilos para a lista de notícias dentro do perfil (se ListaNoticias for um grid) */
+/* Se ListaNoticias tem uma classe de container como 'noticias-grid' */
+.user-posts-section .noticias-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px; /* Espaçamento entre os cards de notícia */
+    padding: 0;
+    list-style: none;
+}
+
+/* Mensagens de Carregamento e Erro */
+.profile-container {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    font-size: 1.2em;
+    color: #666;
+}
+
+.error-message {
+    color: #d9534f;
+    font-weight: bold;
+    text-align: center;
+    padding: 20px;
+    border: 1px solid #d9534f;
+    background-color: #fcf8f8; /* Fundo mais suave para a mensagem de erro */
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+/* Media Queries para Responsividade */
+@media (max-width: 768px) {
+    .profile-card, .user-posts-section {
+        padding: 20px;
+        border-radius: 8px;
+    }
+    .profile-name {
+        font-size: 2em;
+    }
+    .profile-avatar {
+        width: 120px;
+        height: 120px;
+    }
+    .user-posts-section .titulo-secao {
+        font-size: 1.8em;
+    }
+    .user-posts-section .noticias-grid {
+        grid-template-columns: 1fr; /* Uma coluna em telas menores */
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-content {
+        padding: 20px 10px;
+    }
+    .profile-name {
+        font-size: 1.8em;
+    }
+    .profile-details p {
+        font-size: 1em;
+    }
+}
