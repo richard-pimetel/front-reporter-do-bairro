@@ -95,8 +95,19 @@ export interface Usuario {
   data_nascimento: string
   foto_perfil: string
   biografia: string | null
-  noticias: NoticiaItem[] | null; // A PROPRIEDADE CORRIGIDA QUE ESTAVA FALTANDO
+  noticias: NoticiaItem[] | null;
 }
+
+export interface UsuarioUpdatePayload {
+  id: number; // ID do usuário que será atualizado (obrigatório)
+  nome?: string; // Nome atualizado (opcional)
+  biografia?: string | null; // Biografia atualizada (opcional, pode ser null)
+  foto_perfil?: string | null; // <-- **CERTIFIQUE-SE DE QUE ESTÁ ASSIM**
+  senha?: string; // Se você for permitir a atualização de senha, adicione aqui (parece que sim, pois você está enviando)
+  email?: string; // Adicione se o email puder ser atualizado
+  data_nascimento?: string; // Adicione se a data de nascimento puder ser atualizada
+}
+
 
 export type Coordenadas = {
   lat: number
@@ -136,13 +147,4 @@ export interface ComentarioResponse {
   status: boolean;
   status_code: number;
   comentarios: ComentarioItem[];
-}
-
-export interface UsuarioUpdatePayload {
-  id: number; // ID do usuário que será atualizado (obrigatório)
-  nome?: string; // Nome atualizado (opcional)
-  biografia?: string | null; // Biografia atualizada (opcional, pode ser null)
-  foto_perfil?: string; // URL da foto de perfil atualizada (opcional)
-  // Se você for permitir a atualização de senha, adicione aqui:
-  // senha?: string; 
 }

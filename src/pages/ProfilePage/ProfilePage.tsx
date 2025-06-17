@@ -3,52 +3,65 @@ import './ProfilePage.css';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import getUsuario from '../../API/user/getUsuario'; // Sua função para buscar o usuário
-import { updateUsuario } from '../../API/user/putUsuario'; // NOVA: Sua função para atualizar o usuário
+import { updateUsuario } from '../../API/user/putUsuario'; // Sua função para atualizar o usuário
 import Header from '../../components/Header/Header';
 import ListaNoticias from '../../components/ListaNoticias/ListaNoticias';
-import { Usuario, NoticiaItem } from '../../types'; // Importe os tipos corretos, incluindo UsuarioUpdatePayload
+import { useAuth } from '../../contexts/AuthContext';
+import { Usuario, NoticiaItem } from '../../types';
 
 function ProfilePage() {
+    // Usando o contexto de autenticação para pegar as informações do usuário logado
+    const { user: loggedInUser, login, isLoggedIn } = useAuth(); // Adicionado 'login' para atualizar o contexto
     const { id } = useParams<{ id: string }>();
-    const [user, setUser] = useState<Usuario | null>(null);
+
+    // State para o usuário exibido na página (pode ser o próprio usuário logado ou outro)
+    const [userProfile, setUserProfile] = useState<Usuario | null>(null);
     const [userPosts, setUserPosts] = useState<NoticiaItem[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-    const [isEditing, setIsEditing] = useState<boolean>(false); // NOVO: Estado para o modo de edição
-    const [editNome, setEditNome] = useState<string>(''); // NOVO: Estado para o nome no formulário
-    const [editBiografia, setEditBiografia] = useState<string>(''); // NOVO: Estado para a biografia no formulário
-    const [editFotoPerfil, setEditFotoPerfil] = useState<string>(''); // NOVO: Estado para a foto no formulário
-    const [updateMessage, setUpdateMessage] = useState<string | null>(null); // NOVO: Mensagens de atualização
+    const [isEditing, setIsEditing] = useState<boolean>(false);
+    const [editNome, setEditNome] = useState<string>('');
+    const [editBiografia, setEditBiografia] = useState<string>('');
+    const [editFotoPerfil, setEditFotoPerfil] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+    const [confirmPassword, setConfirmPassword] = useState<string>('');
+    const [updateMessage, setUpdateMessage] = useState<string | null>(null);
+
+    // Determina se o perfil sendo visualizado é o do usuário logado
+    const isCurrentUserProfile = loggedInUser && userProfile && loggedInUser.id === userProfile.id;
 
     // Efeito para carregar os dados do usuário
     useEffect(() => {
         const fetchData = async () => {
-            if (!id) {
-                setError("ID do usuário não fornecido na URL.");
+            const targetId = id ? Number(id) : loggedInUser?.id;
+
+            if (!targetId) {
+                setError("ID do usuário não fornecido na URL e nenhum usuário logado.");
                 setLoading(false);
                 return;
             }
 
             setLoading(true);
             setError(null);
-            setUser(null);
+            setUserProfile(null);
             setUserPosts([]);
-            setUpdateMessage(null); // Limpa mensagens ao recarregar perfil
+            setUpdateMessage(null);
 
             try {
-                const userIdNum = Number(id);
-                const response = await getUsuario(userIdNum);
+                // Agora getUsuario retorna diretamente Usuario | null
+                const userData = await getUsuario(targetId); // <-- MUDANÇA AQUI: Não precisa mais de Array.isArray
 
-                if (response) {
-                    const userData = Array.isArray(response.user) ? response.user[0] : response;
-                    setUser(userData);
+                if (userData) { // Se userData for um objeto Usuario
+                    setUserProfile(userData); // <-- AGORA O TIPO ESTÁ CORRETO
                     console.log("DEBUG: Dados do usuário recebidos (ProfilePage):", userData);
 
-                    // Inicializa os campos do formulário de edição com os dados do usuário
                     setEditNome(userData.nome || '');
                     setEditBiografia(userData.biografia || '');
                     setEditFotoPerfil(userData.foto_perfil || '');
+                    setPassword('');
+                    setConfirmPassword('');
 
+                    // Verifica se 'noticias' existe e é um array dentro do objeto Usuario
                     if (userData.noticias && Array.isArray(userData.noticias)) {
                         setUserPosts(userData.noticias);
                         console.log("DEBUG: Notícias carregadas no estado userPosts:", userData.noticias);
@@ -58,7 +71,7 @@ function ProfilePage() {
                     }
                 } else {
                     setError("Usuário não encontrado.");
-                    console.warn(`DEBUG: getUsuario(ID: ${userIdNum}) retornou null/undefined.`);
+                    console.warn(`DEBUG: getUsuario(ID: ${targetId}) retornou null.`);
                 }
 
             } catch (err) {
@@ -71,46 +84,81 @@ function ProfilePage() {
         };
 
         fetchData();
-    }, [id]);
+    }, [id, loggedInUser?.id]);
 
-    // Função para alternar o modo de edição
     const handleEditToggle = () => {
         setIsEditing(!isEditing);
-        // Se estiver entrando no modo de edição, inicializa os campos com os valores atuais do usuário
-        if (!isEditing && user) {
-            setEditNome(user.nome);
-            setEditBiografia(user.biografia || '');
-            setEditFotoPerfil(user.foto_perfil || '');
+        if (!isEditing && userProfile) {
+            setEditNome(userProfile.nome);
+            setEditBiografia(userProfile.biografia || '');
+            setEditFotoPerfil(userProfile.foto_perfil || '');
+            setPassword('');
+            setConfirmPassword('');
         }
-        setUpdateMessage(null); // Limpa mensagens de atualização ao alternar
+        setUpdateMessage(null);
     };
 
-    // Função para lidar com a submissão do formulário de edição
     const handleUpdateSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         setLoading(true);
         setUpdateMessage(null);
 
-        if (!user?.id) {
-            setUpdateMessage('Erro: ID do usuário não encontrado para atualização.');
+        if (!loggedInUser?.id || !loggedInUser?.email || !loggedInUser?.data_nascimento) {
+            setUpdateMessage('Erro: Dados essenciais do usuário logado (ID, Email ou Data de Nascimento) não encontrados para atualização.');
+            setLoading(false);
+            return;
+        }
+
+        if (!password) {
+            setUpdateMessage('Por favor, digite sua senha atual para confirmar as alterações.');
+            setLoading(false);
+            return;
+        }
+        if (password !== confirmPassword) {
+            setUpdateMessage('As senhas não coincidem. Por favor, confirme sua senha corretamente.');
             setLoading(false);
             return;
         }
 
         try {
             const payload = {
-                id: user.id,
+                id: loggedInUser.id,
                 nome: editNome,
-                biografia: editBiografia === '' ? null : editBiografia, // Envia null se vazio
-                foto_perfil: editFotoPerfil,
+                email: loggedInUser.email,
+                senha: password,
+                data_nascimento: loggedInUser.data_nascimento,
+                biografia: editBiografia === '' ? null : editBiografia,
+                foto_perfil: editFotoPerfil === '' ? null : editFotoPerfil,
+                noticias: null,
             };
+
+            console.log("DEBUG: Payload de atualização enviado:", payload);
 
             const result = await updateUsuario(payload);
 
             if (result.status && result.user) {
-                setUser(result.user); // Atualiza o estado 'user' com os dados retornados pelo backend
+                // Atualiza o estado 'userProfile'
+                setUserProfile(result.user);
+
+                // ATUALIZA O CONTEXTO DE AUTENTICAÇÃO COM OS NOVOS DADOS
+                // Certifique-se de que 'result.user' tem todos os campos necessários para 'Usuario'
+                if (isLoggedIn && loggedInUser.id === result.user.id) {
+                    const updatedContextUser: Usuario = {
+                        id: result.user.id,
+                        nome: result.user.nome,
+                        email: result.user.email,
+                        data_nascimento: result.user.data_nascimento,
+                        biografia: result.user.biografia,
+                        foto_perfil: result.user.foto_perfil,
+                        noticias: null
+                        // Notícias não são normalmente armazenadas no contexto de autenticação
+                        // Se houver outros campos que você precisa no contexto, adicione-os aqui
+                    };
+                    login(updatedContextUser); // Usamos o 'login' do contexto para atualizar
+                }
+
                 setUpdateMessage(result.message || 'Perfil atualizado com sucesso!');
-                setIsEditing(false); // Sai do modo de edição
+                setIsEditing(false);
             } else {
                 setUpdateMessage(result.message || 'Falha ao atualizar o perfil.');
             }
@@ -119,9 +167,10 @@ function ProfilePage() {
             setUpdateMessage('Ocorreu um erro inesperado ao atualizar o perfil.');
         } finally {
             setLoading(false);
+            setPassword('');
+            setConfirmPassword('');
         }
     };
-
 
     if (loading) {
         return (
@@ -145,7 +194,7 @@ function ProfilePage() {
         );
     }
 
-    if (!user) {
+    if (!userProfile) {
         return (
             <>
                 <Header />
@@ -164,7 +213,6 @@ function ProfilePage() {
                     <div className="profile-header">
                         {/* Foto de Perfil */}
                         {isEditing ? (
-                            // Modo de edição: input para URL da foto
                             <div className="profile-edit-field">
                                 <label htmlFor="editFotoPerfil">URL da Foto:</label>
                                 <input
@@ -178,9 +226,8 @@ function ProfilePage() {
                                 {editFotoPerfil && <img src={editFotoPerfil} alt="Pré-visualização" className="profile-avatar-preview" />}
                             </div>
                         ) : (
-                            // Modo de visualização: exibe a foto atual
                             <img
-                                src={user.foto_perfil || "https://www.pngall.com/wp-content/uploads/5/User-Profile-PNG-Image.png"}
+                                src={userProfile.foto_perfil || "https://www.pngall.com/wp-content/uploads/5/User-Profile-PNG-Image.png"}
                                 alt="Foto de Perfil"
                                 className="profile-avatar"
                             />
@@ -188,7 +235,6 @@ function ProfilePage() {
 
                         {/* Nome do Usuário */}
                         {isEditing ? (
-                            // Modo de edição: input para o nome
                             <div className="profile-edit-field">
                                 <label htmlFor="editNome">Nome:</label>
                                 <input
@@ -201,15 +247,13 @@ function ProfilePage() {
                                 />
                             </div>
                         ) : (
-                            // Modo de visualização: exibe o nome
-                            <h1 className="profile-name">{user.nome}</h1>
+                            <h1 className="profile-name">{userProfile.nome}</h1>
                         )}
                     </div>
 
                     <div className="profile-details">
                         {/* Biografia */}
                         {isEditing ? (
-                            // Modo de edição: textarea para a biografia
                             <div className="profile-edit-field">
                                 <label htmlFor="editBiografia">Biografia:</label>
                                 <textarea
@@ -221,8 +265,45 @@ function ProfilePage() {
                                 />
                             </div>
                         ) : (
-                            // Modo de visualização: exibe a biografia
-                            user.biografia && <p><strong>Biografia:</strong> {user.biografia}</p>
+                            userProfile.biografia && <p><strong>Biografia:</strong> {userProfile.biografia}</p>
+                        )}
+
+                        {/* NOVO: Campos de senha (aparecem apenas em modo de edição e para o próprio usuário) */}
+                        {isEditing && isCurrentUserProfile && (
+                            <>
+                                <div className="profile-edit-field">
+                                    <label htmlFor="password">Senha:</label>
+                                    <input
+                                        type="password"
+                                        id="password"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        disabled={loading}
+                                        className="profile-input"
+                                        placeholder="Digite sua senha atual"
+                                    />
+                                </div>
+                                <div className="profile-edit-field">
+                                    <label htmlFor="confirmPassword">Confirmar Senha:</label>
+                                    <input
+                                        type="password"
+                                        id="confirmPassword"
+                                        value={confirmPassword}
+                                        onChange={(e) => setConfirmPassword(e.target.value)}
+                                        disabled={loading}
+                                        className="profile-input"
+                                        placeholder="Confirme sua senha"
+                                    />
+                                </div>
+                            </>
+                        )}
+
+                        {/* Email e Data de Nascimento (apenas visualização e apenas para o próprio usuário) */}
+                        {isCurrentUserProfile && (
+                            <>
+                                <p><strong>Email:</strong> {userProfile.email}</p>
+                                <p><strong>Data de Nascimento:</strong> {userProfile.data_nascimento ? new Date(userProfile.data_nascimento).toLocaleDateString('pt-BR') : 'Não informada'}</p>
+                            </>
                         )}
                     </div>
 
@@ -235,7 +316,7 @@ function ProfilePage() {
 
                     {/* Botões de ação */}
                     <div className="profile-actions">
-                        {isEditing ? (
+                        {isEditing && isCurrentUserProfile ? (
                             <>
                                 <button
                                     onClick={handleUpdateSubmit}
@@ -245,7 +326,7 @@ function ProfilePage() {
                                     {loading ? 'Salvando...' : 'Salvar Alterações'}
                                 </button>
                                 <button
-                                    onClick={handleEditToggle} // Cancela a edição
+                                    onClick={handleEditToggle}
                                     disabled={loading}
                                     className="profile-button secondary"
                                 >
@@ -253,12 +334,14 @@ function ProfilePage() {
                                 </button>
                             </>
                         ) : (
-                            <button
-                                onClick={handleEditToggle} // Entra no modo de edição
-                                className="profile-button primary"
-                            >
-                                Editar Perfil
-                            </button>
+                            isCurrentUserProfile && (
+                                <button
+                                    onClick={handleEditToggle}
+                                    className="profile-button primary"
+                                >
+                                    Editar Perfil
+                                </button>
+                            )
                         )}
                     </div>
                 </div>

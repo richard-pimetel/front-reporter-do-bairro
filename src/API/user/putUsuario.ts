@@ -1,5 +1,4 @@
-// src/API/user/updateUsuario.ts
-
+import BASE_URL from '../config'
 import { UsuarioUpdatePayload, Usuario } from '../../types'; // Importe os tipos que você definiu
 
 interface UpdateUsuarioResponse {
@@ -11,7 +10,7 @@ interface UpdateUsuarioResponse {
 
 export async function updateUsuario(payload: UsuarioUpdatePayload): Promise<UpdateUsuarioResponse> {
   // Constrói a URL usando o ID do usuário do payload
-  const url = `http://localhost:8080/v1/bairro-news/user/${payload.id}`;
+  const url = `${BASE_URL}/user/${payload.id}`;
 
   try {
     const response = await fetch(url, {
