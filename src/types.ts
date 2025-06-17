@@ -1,42 +1,16 @@
-export interface NoticiaItem {
-  id?: number
-  titulo: string
-  categorias: Categoria[] | number[]
-  urls_midia?: UrlMidiaItem[] | null
-  conteudo: string
-  data_postagem: string
-  User?: Usuario
-  tbl_usuario_id?: number
-  endereco: Endereco
-  comentarios?: ComentarioItem[]
-}
+// src/types.ts
+
 export interface UrlMidiaItem {
   id?: number;
   url_midia: string;
   tbl_noticia_id?: number;
 }
 
-export interface ListaNoticiasProps {
-  noticias: NoticiaItem[];
-}
 export interface Categoria {
   id: number;
   nome: string;
   descricao: string;
   sigla: string;
-}
-
-export interface CategoriaResponse {
-  status: boolean;
-  status_code: number;
-  items: number;
-  categorias: Categoria[];
-}
-export interface NoticiaResponse {
-  status: boolean
-  status_code: number
-  items: number
-  noticias: NoticiaItem[]
 }
 
 export interface Endereco {
@@ -53,6 +27,50 @@ export interface Endereco {
   display_name: string
   lat: number
   lon: number
+}
+
+export interface ComentarioItem {
+  id?: number;
+  conteudo: string;
+  tbl_usuario_id: number;
+  tbl_noticia_id: number;
+  data_postagem: string;
+  User?: { // Opcional, para quando o backend envia o usuário que fez o comentário
+    id: number;
+    nome: string;
+    foto_perfil: string;
+  }; 
+}
+
+export interface NoticiaItem {
+  id?: number // ID pode ser opcional para novas notícias antes de serem salvas
+  titulo: string
+  categorias: Categoria[] | number[] // Mantenha isso como está, mas o CardNoticia espera Categoria[] para o nome
+  urls_midia?: UrlMidiaItem[] | null
+  conteudo: string
+  data_postagem: string
+  User?: Usuario // Opcional, se a notícia retornar dados do usuário
+  tbl_usuario_id?: number
+  endereco: Endereco
+  comentarios?: ComentarioItem[]
+}
+
+export interface ListaNoticiasProps {
+  noticias: NoticiaItem[];
+}
+
+export interface CategoriaResponse {
+  status: boolean;
+  status_code: number;
+  items: number;
+  categorias: Categoria[];
+}
+
+export interface NoticiaResponse {
+  status: boolean
+  status_code: number
+  items: number
+  noticias: NoticiaItem[]
 }
 
 export interface NoticiaCreatePayload {
@@ -77,7 +95,9 @@ export interface Usuario {
   data_nascimento: string
   foto_perfil: string
   biografia: string | null
+  noticias: NoticiaItem[] | null; // A PROPRIEDADE CORRIGIDA QUE ESTAVA FALTANDO
 }
+
 export type Coordenadas = {
   lat: number
   lon: number
@@ -95,7 +115,6 @@ export type CoordenadasComEndereco = {
   cep: string | null
 }
 
-// Tipos retornados pelas APIs
 export type NominatimResponseItem = {
   lat: string
   lon: string
@@ -113,21 +132,17 @@ export type ReverseNominatimResponse = {
   [key: string]: any
 }
 
-export interface ComentarioItem {
-  id?: number;
-  conteudo: string;
-  tbl_usuario_id: number;
-  tbl_noticia_id: number;
-  data_postagem: string;
-  User?: {
-    id: number;
-    nome: string;
-    foto_perfil: string;
-  }; // Opcional, para quando o backend envia
-}
-
 export interface ComentarioResponse {
   status: boolean;
   status_code: number;
   comentarios: ComentarioItem[];
+}
+
+export interface UsuarioUpdatePayload {
+  id: number; // ID do usuário que será atualizado (obrigatório)
+  nome?: string; // Nome atualizado (opcional)
+  biografia?: string | null; // Biografia atualizada (opcional, pode ser null)
+  foto_perfil?: string; // URL da foto de perfil atualizada (opcional)
+  // Se você for permitir a atualização de senha, adicione aqui:
+  // senha?: string; 
 }

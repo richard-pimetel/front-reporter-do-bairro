@@ -1,186 +1,240 @@
 /* src/pages/ProfilePage/ProfilePage.css */
 
-/* Estilos Globais da Página */
 .profile-page {
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
-    background-color: #f0f2f5; /* Um cinza claro suave, comum em apps modernos */
-    font-family: 'Arial', sans-serif; /* Use a fonte principal do seu site */
-    color: #333; /* Cor de texto padrão */
+    min-height: 100vh; /* Garante que a página tenha pelo menos a altura da tela */
+    background-color: #f0f2f5; /* Cor de fundo suave */
 }
 
-/* Conteúdo Principal (Centralizado) */
 .profile-content {
-    flex-grow: 1; /* Permite que ocupe o espaço restante */
     display: flex;
-    flex-direction: column; /* Organiza os cards verticalmente */
-    align-items: center; /* Centraliza horizontalmente */
-    padding: 30px 20px; /* Espaçamento interno */
-    gap: 30px; /* Espaçamento entre o card do perfil e a seção de posts */
+    flex-direction: column;
+    align-items: center; /* Centraliza o conteúdo horizontalmente */
+    width: 100%;
+    max-width: 960px; /* Largura máxima para o conteúdo da página */
+    margin: 20px auto; /* Centraliza o container principal com margem superior/inferior */
+    padding: 0 20px; /* Espaçamento nas laterais para telas menores */
+    box-sizing: border-box; /* Inclui padding na largura total */
 }
 
-/* Card do Perfil do Usuário */
 .profile-card {
     background-color: #ffffff;
-    border-radius: 12px; /* Bordas mais arredondadas */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Sombra mais suave e moderna */
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     padding: 30px;
     width: 100%;
     max-width: 700px; /* Largura máxima para o card do perfil */
     text-align: center;
-    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-    position: relative; /* Para posicionar elementos internos se necessário */
-    overflow: hidden; /* Garante que elementos arredondados não vazem */
+    margin-bottom: 30px; /* Espaço abaixo do card do perfil */
 }
 
-/* Efeito ao passar o mouse */
-.profile-card:hover {
-    transform: translateY(-5px); /* Efeito sutil de elevação */
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); /* Sombra mais pronunciada ao passar o mouse */
-}
-
-/* Cabeçalho do Perfil (Foto e Nome) */
 .profile-header {
-    margin-bottom: 25px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-/* Foto de Perfil (Avatar) */
-.profile-avatar {
-    width: 160px; /* Tamanho ligeiramente maior */
-    height: 160px;
-    border-radius: 50%; /* Perfeitamente redondo */
-    object-fit: cover;
-    border: 5px solid #4CAF50; /* Borda um pouco mais grossa e cor vibrante */
-    box-shadow: 0 0 0 7px rgba(76, 175, 80, 0.3); /* Anel externo sutil */
     margin-bottom: 20px;
-    transition: all 0.3s ease-in-out;
 }
 
-.profile-avatar:hover {
-    transform: scale(1.05); /* Efeito de zoom ao passar o mouse */
-    border-color: #388E3C; /* Borda mais escura no hover */
-}
-
-/* Nome do Usuário */
-.profile-name {
-    font-size: 2.6em; /* Aumenta um pouco o tamanho do nome */
-    color: #2c3e50; /* Cor mais escura para o nome */
+.profile-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #007bff;
     margin-bottom: 15px;
-    font-weight: 700; /* Mais negrito */
-    letter-spacing: -0.5px; /* Espaçamento sutil para melhor leitura */
 }
 
-/* Detalhes do Perfil (Biografia) */
-.profile-details {
-    text-align: left; /* Alinha a biografia à esquerda */
-    max-width: 500px; /* Limita a largura do texto da biografia */
-    margin: 0 auto; /* Centraliza o bloco da biografia */
+.profile-name {
+    font-size: 2.2em;
+    color: #333;
+    margin: 0;
 }
 
 .profile-details p {
     font-size: 1.1em;
     color: #555;
     line-height: 1.6;
-    margin-bottom: 0; /* Remove margem inferior padrão de parágrafo */
 }
 
-.profile-details p strong {
-    color: #333;
-    margin-right: 8px;
-    font-weight: 600; /* Negrito um pouco mais suave */
-}
-
-/* Seção de Publicações do Usuário (Mesmo que esteja vazia por enquanto) */
 .user-posts-section {
-    background-color: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    padding: 30px;
-    width: 100%;
-    max-width: 900px; /* Mais larga para acomodar várias notícias */
-    text-align: left;
-}
-
-.user-posts-section .titulo-secao {
-    font-size: 2.2em;
-    color: #2c3e50;
-    text-align: center;
-    margin-bottom: 30px;
-    font-weight: 700;
-}
-
-.user-posts-section p {
-    text-align: center;
-    color: #777;
-    font-style: italic;
+    width: 100%; /* Ocupa a largura total do profile-content */
+    max-width: 900px; /* Garante que a seção de posts não fique muito larga */
     margin-top: 20px;
+    padding-bottom: 40px; /* Espaço para o final da página */
+    text-align: center; /* Centraliza o título */
 }
 
-/* Estilos para a lista de notícias dentro do perfil (se ListaNoticias for um grid) */
-/* Se ListaNoticias tem uma classe de container como 'noticias-grid' */
-.user-posts-section .noticias-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 25px; /* Espaçamento entre os cards de notícia */
-    padding: 0;
-    list-style: none;
+.titulo-secao {
+    font-size: 2em;
+    color: #333;
+    margin-bottom: 25px;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 10px;
+    display: inline-block; /* Para o border-bottom se ajustar ao texto */
 }
 
-/* Mensagens de Carregamento e Erro */
-.profile-container {
-    flex-grow: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    font-size: 1.2em;
-    color: #666;
+/* Estilos para mensagens como "Nenhuma publicação encontrada" */
+.user-posts-section p {
+    font-size: 1.1em;
+    color: #777;
+    margin-top: 30px;
 }
 
 .error-message {
-    color: #d9534f;
+    color: #dc3545;
     font-weight: bold;
-    text-align: center;
-    padding: 20px;
-    border: 1px solid #d9534f;
-    background-color: #fcf8f8; /* Fundo mais suave para a mensagem de erro */
-    border-radius: 8px;
-    margin-top: 20px;
 }
 
-/* Media Queries para Responsividade */
+/* Responsividade básica para telas menores */
 @media (max-width: 768px) {
-    .profile-card, .user-posts-section {
+    .profile-content {
+        margin: 15px auto;
+        padding: 0 15px;
+    }
+
+    .profile-card {
         padding: 20px;
-        border-radius: 8px;
     }
-    .profile-name {
-        font-size: 2em;
-    }
+
     .profile-avatar {
-        width: 120px;
-        height: 120px;
+        width: 100px;
+        height: 100px;
     }
-    .user-posts-section .titulo-secao {
+
+    .profile-name {
         font-size: 1.8em;
     }
-    .user-posts-section .noticias-grid {
-        grid-template-columns: 1fr; /* Uma coluna em telas menores */
+
+    .titulo-secao {
+        font-size: 1.7em;
     }
 }
 
 @media (max-width: 480px) {
-    .profile-content {
-        padding: 20px 10px;
+    .profile-card {
+        padding: 15px;
     }
+
+    .profile-avatar {
+        width: 80px;
+        height: 80px;
+    }
+
     .profile-name {
-        font-size: 1.8em;
+        font-size: 1.5em;
     }
-    .profile-details p {
-        font-size: 1em;
+
+    .titulo-secao {
+        font-size: 1.5em;
     }
+}
+
+/* src/pages/ProfilePage/ProfilePage.css */
+
+/* ... (seu CSS existente para profile-page, profile-content, etc.) ... */
+
+/* Estilos para o modo de edição */
+.profile-edit-field {
+    margin-bottom: 15px;
+    text-align: left; /* Alinha labels e inputs à esquerda dentro do campo */
+}
+
+.profile-edit-field label {
+    display: block; /* Cada label em uma nova linha */
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.profile-input,
+.profile-textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1em;
+    box-sizing: border-box; /* Inclui padding na largura */
+    transition: border-color 0.2s ease-in-out;
+}
+
+.profile-input:focus,
+.profile-textarea:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+.profile-textarea {
+    resize: vertical; /* Permite redimensionar verticalmente */
+    min-height: 80px;
+}
+
+.profile-avatar-preview {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-top: 10px;
+    border: 2px solid #ccc;
+}
+
+.profile-actions {
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+    gap: 15px; /* Espaço entre os botões */
+}
+
+.profile-button {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out, transform 0.1s ease;
+}
+
+.profile-button.primary {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.profile-button.primary:hover:not(:disabled) {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+.profile-button.secondary {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+.profile-button.secondary:hover:not(:disabled) {
+    background-color: #5a6268;
+    transform: translateY(-2px);
+}
+
+.profile-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+/* Mensagens de atualização */
+.update-message {
+    margin-top: 20px;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.update-message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.update-message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
 }

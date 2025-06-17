@@ -1,26 +1,42 @@
 // src/components/CardNoticia/CardNoticia.tsx
-import './CardNoticia.css';
-import { NoticiaItem, Categoria } from '../../types';
+import './CardNoticia.css'; // Importa o CSS
+import { NoticiaItem, Categoria } from '../../types'; // Importe os tipos corretos, incluindo Categoria
 
 interface CardNoticiaProps {
   noticia: NoticiaItem;
 }
 
 function CardNoticia({ noticia }: CardNoticiaProps) {
-  // Acessa a primeira URL da mídia do array de objetos UrlMidiaItem.
-  // Garante que urls_midia existe, que é um array, e que tem pelo menos um elemento.
-  // Depois, acessa a propriedade 'url_midia' desse primeiro elemento.
-  const imageUrl =
-    noticia.urls_midia && noticia.urls_midia.length > 0
-      ? noticia.urls_midia[0].url_midia
-      : 'https://via.placeholder.com/400x250/CCCCCC/FFFFFF?text=Sem+Imagem'; // Imagem fallback
+  // DEBUG: Este log deve aparecer no console se o componente está sendo renderizado
+  console.log("DEBUG: CardNoticia está sendo RENDERIZADO para a notícia:", noticia.titulo, "ID:", noticia.id);
 
-  // Converte a string data_postagem para um objeto Date antes de formatar
+  const linkNoticia = noticia.id ? `/noticia/${noticia.id}` : '#';
+
+  // Lógica de URL da imagem mais robusta
+  const imageUrl =
+    (noticia.urls_midia &&
+     Array.isArray(noticia.urls_midia) &&
+     noticia.urls_midia.length > 0 &&
+     noticia.urls_midia[0]?.url_midia)
+      ? noticia.urls_midia[0].url_midia
+      : 'https://via.placeholder.com/400x250/CCCCCC/FFFFFF?text=Sem+Imagem'; // Imagem de fallback
+
+  // Lógica de nome da categoria mais robusta
+  let categoryName = 'Sem Categoria';
+  if (noticia.categorias && Array.isArray(noticia.categorias) && noticia.categorias.length > 0) {
+    const firstCategory = noticia.categorias[0];
+    if (typeof firstCategory === 'object' && firstCategory !== null && 'nome' in firstCategory) {
+      categoryName = (firstCategory as Categoria).nome;
+    } else if (typeof firstCategory === 'number') {
+      categoryName = `Categoria ID: ${firstCategory}`; 
+    }
+  }
+
+  // Formatação da data mais robusta
   let dataFormatada = 'Data Indisponível';
   if (noticia.data_postagem) {
     try {
       const dataObj = new Date(noticia.data_postagem);
-      // Verifica se a data é válida antes de formatar
       if (!isNaN(dataObj.getTime())) {
         dataFormatada = dataObj.toLocaleDateString('pt-BR', {
           day: '2-digit',
@@ -31,27 +47,25 @@ function CardNoticia({ noticia }: CardNoticiaProps) {
         });
       }
     } catch (e) {
-      console.error('Erro ao formatar data:', e);
+      console.error('Erro ao formatar data em CardNoticia:', e);
     }
   }
 
-  // Define o link do card. Use uma rota real se tiver, senão, apenas uma div.
-  // Exemplo: `/noticia/${noticia.id}` se você tiver uma rota de detalhes.
-  const linkNoticia = `/noticia/${noticia.id}`; // Exemplo, ajuste conforme sua rota
-
   return (
-    <a href={linkNoticia} className="card-noticia"> {/* Alterado para usar linkNoticia */}
+    <a href={linkNoticia} className="card-noticia"> 
       <div className="card-noticia-imagem-container">
-        <img src={imageUrl} alt={noticia.titulo} className="card-noticia-imagem" />
+        <img 
+            src={imageUrl} 
+            alt={noticia.titulo || "Imagem da Notícia"} 
+            className="card-noticia-imagem" 
+        />
         <span className="card-noticia-categoria">
-          {noticia.categorias && noticia.categorias.length > 0
-            ? (noticia.categorias[0] as Categoria).nome // Adicionado type assertion para Categoria
-            : 'Sem Categoria'}
+          {categoryName}
         </span>
       </div>
       <div className="card-noticia-conteudo">
-        <h4 className="card-noticia-titulo">{noticia.titulo}</h4>
-        <p className="card-noticia-descricao">{noticia.conteudo}</p>
+        <h4 className="card-noticia-titulo">{noticia.titulo || 'Título Indisponível'}</h4>
+        <p className="card-noticia-descricao">{noticia.conteudo || 'Conteúdo Indisponível'}</p>
         {noticia.data_postagem && (
           <p className="card-noticia-tempo">{dataFormatada}</p>
         )}
