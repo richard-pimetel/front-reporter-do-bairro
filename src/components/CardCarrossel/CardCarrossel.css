@@ -1,66 +1,170 @@
 .card-carrossel {
     position: relative;
     width: 100%;
-    height: 100%; /* Será controlado pelo pai */
+    height: 100%;
     background-size: cover;
     background-position: center;
-    border-radius: 8px;
+    border-radius: var(--border-radius-xl);
     overflow: hidden;
     display: flex;
     align-items: flex-end;
-    color: white;
+    color: var(--color-white);
     text-decoration: none;
-    transition: transform 0.2s ease-in-out;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .card-carrossel:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-  }
-  
-  .card-carrossel-overlay {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--shadow-lg);
+}
+
+.card-carrossel:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+}
+
+.card-carrossel-overlay {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 50%);
+    background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.8) 0%,
+        rgba(0, 0, 0, 0.4) 40%,
+        rgba(0, 0, 0, 0.1) 70%,
+        transparent 100%
+    );
     z-index: 1;
-  }
-  
-  .card-carrossel-conteudo {
+    transition: all 0.4s ease;
+}
+
+.card-carrossel:hover .card-carrossel-overlay {
+    background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.9) 0%,
+        rgba(0, 0, 0, 0.5) 40%,
+        rgba(0, 0, 0, 0.2) 70%,
+        transparent 100%
+    );
+}
+
+.card-carrossel-conteudo {
     position: relative;
     z-index: 2;
-    padding: 20px;
+    padding: 2rem;
     width: 100%;
-    box-sizing: border-box; /* Garante que o padding não aumente a largura */
-  }
-  
-  .card-carrossel-categoria {
-    background-color: #ff1900; /* Cor de exemplo, ajustar conforme imagem */
-    color: white;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 0.8em;
-    font-weight: bold;
-    margin-bottom: 8px;
+    box-sizing: border-box;
+    transform: translateY(0);
+    transition: all 0.4s ease;
+}
+
+.card-carrossel:hover .card-carrossel-conteudo {
+    transform: translateY(-8px);
+}
+
+.card-carrossel-categoria {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    color: var(--color-white);
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius-lg);
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
     display: inline-block;
-  }
-  
-  .card-carrossel-titulo {
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s ease;
+}
+
+.card-carrossel:hover .card-carrossel-categoria {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-lg);
+}
+
+.card-carrossel-titulo {
     margin: 0;
-    font-size: 1.4em;
+    font-size: 1.5rem;
     line-height: 1.3;
-  }
-  
-  .card-carrossel-principal .card-carrossel-titulo {
-      font-size: 2em; /* Título maior para o card principal */
-  }
-  
-  
-  .card-carrossel-tempo {
-    font-size: 0.9em;
-    opacity: 0.8;
-    margin-top: 8px;
-  }
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+.card-carrossel-principal .card-carrossel-titulo {
+    font-size: 2.25rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+}
+
+.card-carrossel:hover .card-carrossel-titulo {
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.card-carrossel-tempo {
+    font-size: 0.95rem;
+    opacity: 0.9;
+    margin-top: 0.75rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.card-carrossel-tempo::before {
+    content: '📅';
+    font-size: 0.875rem;
+}
+
+.card-carrossel-endereco {
+    font-size: 0.9rem;
+    opacity: 0.85;
+    margin-top: 0.5rem;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.card-carrossel-endereco::before {
+    content: '📍';
+    font-size: 0.875rem;
+}
+
+@media (max-width: 768px) {
+    .card-carrossel-conteudo {
+        padding: 1.5rem;
+    }
+
+    .card-carrossel-titulo {
+        font-size: 1.25rem;
+    }
+
+    .card-carrossel-principal .card-carrossel-titulo {
+        font-size: 1.75rem;
+    }
+
+    .card-carrossel-categoria {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .card-carrossel-conteudo {
+        padding: 1.25rem;
+    }
+
+    .card-carrossel-titulo {
+        font-size: 1.125rem;
+    }
+
+    .card-carrossel-principal .card-carrossel-titulo {
+        font-size: 1.5rem;
+    }
+
+    .card-carrossel-tempo,
+    .card-carrossel-endereco {
+        font-size: 0.85rem;
+    }
+}

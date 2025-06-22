@@ -1,26 +1,59 @@
 .category-buttons-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
 }
 
 .category-button {
-  padding: 8px 15px;
-  border: 1px solid #ccc;
-  border-radius: 20px;
-  background-color: #f0f0f0;
-  cursor: pointer;
-  font-size: 0.9em;
-  transition: all 0.2s ease-in-out;
+    padding: 0.75rem 1.25rem;
+    border: 2px solid var(--color-gray-300);
+    border-radius: 2rem;
+    background: var(--color-white);
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    color: var(--color-gray-700);
+    box-shadow: var(--shadow-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
 }
 
 .category-button:hover {
-  background-color: #e0e0e0;
+    background: var(--color-gray-50);
+    border-color: var(--color-primary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
 }
 
 .category-button.selected {
-  background-color: #007bff; /* Cor de destaque para categoria selecionada */
-  color: white;
-  border-color: #007bff;
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    color: var(--color-white);
+    border-color: var(--color-primary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.category-button.selected:hover {
+    background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 100%);
+    transform: translateY(-3px);
+}
+
+@media (max-width: 768px) {
+    .category-buttons-container {
+        gap: 0.5rem;
+    }
+
+    .category-button {
+        padding: 0.6rem 1rem;
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .category-button {
+        padding: 0.5rem 0.875rem;
+        font-size: 0.8rem;
+    }
 }

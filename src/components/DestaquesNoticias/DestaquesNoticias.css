@@ -1,76 +1,121 @@
 .destaques-noticias-container {
-    display: flex;
-    gap: 20px;
-    margin-bottom: 40px;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+    margin-bottom: 3rem;
     width: 100%;
-    box-sizing: border-box;
+    min-height: 500px;
 }
 
 .card-principal-wrapper {
-    flex: 2; /* Ocupa 2 partes do espaço disponível */
-    height: 400px; /* Altura fixa para o card principal */
-    min-width: 60%;
+    position: relative;
+    height: 500px;
+    border-radius: var(--border-radius-xl);
     overflow: hidden;
+    box-shadow: var(--shadow-xl);
+    transition: all 0.4s ease;
+}
+
+.card-principal-wrapper:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
 }
 
 .cards-laterais-wrapper {
-    flex: 1; /* Ocupa 1 parte do espaço disponível */
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    min-width: 0;
-    overflow: hidden;
+    gap: 1.5rem;
 }
 
 .cards-laterais-wrapper .card-carrossel {
-    height: 190px;
-    min-width: 0;
+    height: 235px;
+    border-radius: var(--border-radius-lg);
     overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    transition: all 0.3s ease;
 }
 
-/* É fundamental que as imagens dentro dos cards se ajustem */
+.cards-laterais-wrapper .card-carrossel:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-xl);
+}
+
 .card-carrossel .card-carrossel-imagem {
-  width: 100%; /* Garante que a imagem ocupe toda a largura do seu contêiner */
-  height: 100%; /* Garante que a imagem ocupe toda a altura do seu contêiner */
-  object-fit: cover; /* Recorta a imagem para preencher o contêiner sem distorcer */
-  display: block; /* Remove o espaço extra abaixo da imagem */
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: all 0.4s ease;
 }
 
-/* Opcional: Se o CardNoticia for usado em outros lugares sem o CardCarrossel,
-   aplique as mesmas regras de imagem no .card-noticia-imagem */
+.card-carrossel:hover .card-carrossel-imagem {
+    transform: scale(1.05);
+}
+
 .card-noticia-imagem {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
+    transition: all 0.4s ease;
 }
 
+.card-noticia:hover .card-noticia-imagem {
+    transform: scale(1.05);
+}
 
-@media (max-width: 900px) {
-  .destaques-noticias-container {
-    flex-direction: column;
-    /* Remover o width: 100% aqui se você quiser que ele seja fluido no mobile,
-       mas mantê-lo é geralmente seguro */
-    width: 100%;
-  }
+@media (max-width: 1024px) {
+    .destaques-noticias-container {
+        gap: 1.5rem;
+        min-height: 450px;
+    }
 
-  .card-principal-wrapper,
-  .cards-laterais-wrapper {
-    flex: none;
-    width: 100%;
-    /* Mantenha o min-width: 0 e overflow: hidden também no media query */
-    min-width: 0;
-    overflow: hidden;
-  }
+    .card-principal-wrapper {
+        height: 450px;
+    }
 
-  .card-principal-wrapper {
-    height: 300px; /* Ajuste de altura para telas menores */
-  }
+    .cards-laterais-wrapper .card-carrossel {
+        height: 210px;
+    }
+}
 
-  .cards-laterais-wrapper .card-carrossel {
-    height: 150px; /* Ajuste de altura para telas menores */
-    /* Mantenha o min-width: 0 e overflow: hidden também no media query */
-    min-width: 0;
-    overflow: hidden;
-  }
+@media (max-width: 768px) {
+    .destaques-noticias-container {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .card-principal-wrapper {
+        height: 350px;
+    }
+
+    .cards-laterais-wrapper {
+        grid-template-columns: 1fr 1fr;
+        display: grid;
+        gap: 1rem;
+    }
+
+    .cards-laterais-wrapper .card-carrossel {
+        height: 200px;
+    }
+}
+
+@media (max-width: 480px) {
+    .destaques-noticias-container {
+        gap: 1rem;
+    }
+
+    .card-principal-wrapper {
+        height: 280px;
+    }
+
+    .cards-laterais-wrapper {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .cards-laterais-wrapper .card-carrossel {
+        height: 180px;
+    }
 }
